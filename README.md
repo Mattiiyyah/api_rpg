@@ -72,7 +72,7 @@ Siga os passos abaixo para levantar o reino na sua máquina:
 
 ### 1. Clone o repositório
 ```bash
-git clone (https://github.com/Mattiiyyah/api_rpg)
+git clone https://github.com/Mattiiyyah/api_rpg
 cd api-rpg
 ```
 ### 2. Instale as dependências
