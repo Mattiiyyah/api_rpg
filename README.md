@@ -2,10 +2,18 @@
 
 > *"Onde requisições viram missões e dados se tornam lendas."*
 
+[![Status](https://img.shields.io/badge/Status-Backend_Completed-success?style=for-the-badge&logo=check)](https://github.com/seu-usuario/seu-repo)
 [![Node.js](https://img.shields.io/badge/Node.js-green?style=flat&logo=node.js)](https://nodejs.org/)
 [![Sequelize](https://img.shields.io/badge/Sequelize-ORM-blue?style=flat&logo=sequelize)](https://sequelize.org/)
 [![MySQL](https://img.shields.io/badge/Database-MySQL-orange?style=flat&logo=mysql)](https://www.mysql.com/)
 [![JWT](https://img.shields.io/badge/Auth-JWT-black?style=flat&logo=json-web-tokens)](https://jwt.io/)
+
+## 🚧 Obra em Andamento (Work in Progress)
+
+O "Motor do Reino" (Backend) está finalizado e funcional! ⚙️✅
+
+No entanto, a **Interface Visual** (o portal mágico onde os jogadores clicarão nos botões) ainda não foi construída.
+**O próximo passo desta jornada será o desenvolvimento do Frontend utilizando REACT.JS.** ⚛️
 
 ## 📖 Sobre o Projeto
 
