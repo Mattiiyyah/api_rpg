@@ -19,7 +19,7 @@ No entanto, a **Interface Visual** (o portal mágico onde os jogadores clicarão
 
 Este projeto não é apenas uma API RESTful comum. É uma **gamificação de conceitos avançados de Backend**.
 
-Ao invés de criar um sistema entediante de "Admin" e "Funcionário", transformamos a lógica de negócios em um Reino Medieval. O objetivo foi estudar e implementar relacionamentos complexos de banco de dados, validações robustas e sistemas de segurança (ACL) de uma forma divertida e intuitiva.
+Ao invés de criar um sistema entediante de "Admin" e "Funcionário", transformei a lógica de negócios em um Reino Medieval. O objetivo foi estudar e implementar relacionamentos complexos de banco de dados, validações robustas e sistemas de segurança (ACL) de uma forma divertida e intuitiva.
 
 ### 🧠 A Filosofia (Por que RPG?)
 Backend é sobre gerenciar regras e recursos. Um RPG é a representação perfeita disso:
