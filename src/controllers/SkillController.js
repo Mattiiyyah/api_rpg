@@ -16,6 +16,14 @@ class SkillController {
                 });
             }
 
+            const totalSkills = await Skill.count();
+
+            if(totalSkills >= 10) {
+                return res.status(401).json({
+                    errors: ['O mundo já está sobrecarregado com habilidades. Não é possível criar mais.'],
+                });
+            }
+
             const novaSkill = await Skill.create(req.body);
             const { id, nome, dano, custo_mana, descricao } = novaSkill;
 

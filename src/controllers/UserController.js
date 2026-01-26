@@ -10,6 +10,7 @@ class UserController {
      const isMaster = req.userRole === 'MASTER';
      
      try {
+
         if (!isMaster && !isKing) {
             return res.status(401).json({
                 errors: ['Apenas o Mestre da Guilda (Admin) pode recrutar novos aventureiros.']
@@ -19,6 +20,14 @@ class UserController {
         if (!isKing && req.body.role === 'KING') {
             return res.status(401).json({
                 errors: ['Apenas o Rei pode recrutar um novo Rei.']
+            });
+        }
+
+        const totalUsers = await User.count();
+
+        if (totalUsers >= 9) {
+            return res.status(401).json({
+                errors: ['O reino já atingiu seu limite de aventureiros.']
             });
         }
 
@@ -146,8 +155,8 @@ class UserController {
            errors: ['Você não tem autoridade para mexer na ficha de outro aventureiro.']
          });
        }
-
-       if(isKing && req.body.role && req.body.role !== 'KING') {
+       
+       if(targetIsKing && req.body.role && req.body.role !== 'KING') {
          return res.status(401).json({
            errors:['O Trono é eterno. O Rei não pode abdicar ou ser rebaixado.']
          })

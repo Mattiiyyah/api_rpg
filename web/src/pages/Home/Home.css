@@ -1,0 +1,328 @@
+/* Container Principal with Animated Background */
+.home-container {
+  min-height: 100vh;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  padding: 20px;
+  position: relative;
+  overflow-x: hidden;
+  background-image:
+    radial-gradient(circle at 15% 50%, rgba(130, 87, 229, 0.08) 0%, transparent 25%),
+    radial-gradient(circle at 85% 30%, rgba(4, 211, 97, 0.08) 0%, transparent 25%);
+}
+
+/* Header - Floating Glass Bar */
+.home-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+
+  /* Glassmorphism */
+  background: rgba(23, 23, 26, 0.8);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
+  position: sticky;
+  top: 20px;
+  z-index: 100;
+  border-radius: var(--radius-md);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  margin-bottom: 3rem;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.home-header h1 {
+  font-size: 1.5rem;
+  letter-spacing: 1px;
+  background: linear-gradient(135deg, #e1e1e6 0%, #8257e5 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.header-actions {
+  margin-right: auto;
+  margin-left: 30px;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+/* User Info Section */
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.user-details {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.user-name {
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--text-primary);
+}
+
+/* Role Badges with Neon Glow */
+.role-badge {
+  padding: 4px 12px;
+  border-radius: 100px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 4px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.role-king {
+  background: linear-gradient(135deg, #FFD700 0%, #F59E0B 100%);
+  color: #000;
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+}
+
+.role-master {
+  background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+  color: #fff;
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+}
+
+.role-adventurer {
+  background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);
+  color: #fff;
+  box-shadow: 0 0 15px rgba(139, 92, 246, 0.3);
+}
+
+/* Action Buttons */
+.home-header button {
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.btn-edit {
+  color: var(--text-secondary);
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid transparent;
+}
+
+.btn-edit:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-primary);
+  transform: translateY(-2px);
+}
+
+.btn-delete-account {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+  background: rgba(229, 46, 77, 0.1);
+  color: var(--danger);
+  border: 1px solid rgba(229, 46, 77, 0.2);
+}
+
+.btn-delete-account:hover {
+  background: var(--danger);
+  color: #fff;
+  box-shadow: 0 0 20px rgba(229, 46, 77, 0.4);
+}
+
+.btn-logout {
+  padding: 8px 20px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+}
+
+.btn-logout:hover {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+/* Content Area */
+.content-area {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Forms (Edit Profile) */
+.recruit-section {
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-md);
+  padding: 2rem;
+  border: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+
+.recruit-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(to bottom, var(--primary), var(--secondary));
+}
+
+.recruit-section h2 {
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.recruit-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+  align-items: end;
+}
+
+.recruit-form label {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: block;
+}
+
+.btn-recruit {
+  background: var(--secondary);
+  color: #000;
+  border: none;
+  padding: 12px 24px;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 15px rgba(4, 211, 97, 0.3);
+}
+
+.btn-recruit:hover {
+  background: #05e66a;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(4, 211, 97, 0.4);
+}
+
+.btn-cancel {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  padding: 12px 24px;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-cancel:hover {
+  border-color: var(--text-primary);
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.input-dark {
+  width: 100%;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  transition: all 0.2s;
+}
+
+.input-dark:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(130, 87, 229, 0.1);
+  outline: none;
+}
+
+/* Inventory / Cards */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.empty-card {
+  grid-column: 1 / -1;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: rgba(32, 32, 36, 0.4);
+  border: 2px dashed var(--border);
+  border-radius: var(--radius-md);
+  color: var(--text-tertiary);
+  transition: all 0.3s;
+}
+
+.empty-card:hover {
+  border-color: var(--primary);
+  background: rgba(32, 32, 36, 0.6);
+  transform: scale(1.01);
+}
+
+.empty-card h3 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+  color: var(--text-secondary);
+}
+
+/* Animations */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .home-header {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .user-info {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .recruit-form {
+    grid-template-columns: 1fr;
+  }
+}

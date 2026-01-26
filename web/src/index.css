@@ -1,0 +1,85 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&family=Cinzel:wght@400;700&display=swap');
+
+:root {
+  /* Colors */
+  --bg-primary: #09090b;
+  --bg-secondary: #121214;
+  --bg-tertiary: #202024;
+  --surface-hover: #29292e;
+
+  /* Accents */
+  --primary: #8257e5;
+  --primary-glow: rgba(130, 87, 229, 0.5);
+  --secondary: #04d361;
+  --danger: #e52e4d;
+  --warning: #fba94c;
+
+  /* Text */
+  --text-primary: #e1e1e6;
+  --text-secondary: #a8a8b3;
+  --text-tertiary: #7c7c8a;
+
+  /* Utility */
+  --border: #323238;
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 24px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'Outfit', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+button,
+input {
+  font-family: 'Outfit', sans-serif;
+  border: none;
+  background: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Cinzel', serif;
+  color: var(--text-primary);
+}
+
+/* Glassmorphism Utility */
+.glass {
+  background: rgba(32, 32, 36, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--bg-tertiary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--border);
+}

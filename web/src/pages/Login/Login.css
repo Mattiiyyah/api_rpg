@@ -1,0 +1,311 @@
+/* Login Page Premium Redesign - Consistent Theme */
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  /* Stacks items vertically */
+  justify-content: center;
+  align-items: center;
+  background-color: var(--bg-primary);
+  /* Consistent background with Home/Landing */
+  background-image:
+    radial-gradient(circle at 30% 20%, rgba(130, 87, 229, 0.1) 0%, transparent 40%),
+    radial-gradient(circle at 70% 80%, rgba(4, 211, 97, 0.05) 0%, transparent 40%);
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Welcome Title (formerly tooltip) */
+.login-welcome-tooltip {
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #fff;
+  font-family: 'Cinzel', serif;
+  /* Title font */
+  font-size: 1.25rem;
+  font-weight: 600;
+  text-shadow: 0 0 15px rgba(130, 87, 229, 0.5);
+  animation: slideUp 0.8s ease-out;
+  z-index: 20;
+  letter-spacing: 1px;
+}
+
+.tooltip-icon {
+  font-size: 1.5rem;
+  animation: wave 2s infinite ease-in-out;
+}
+
+@keyframes wave {
+
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+
+  25% {
+    transform: rotate(-20deg);
+  }
+
+  75% {
+    transform: rotate(20deg);
+  }
+}
+
+/* Glass Card - The Project Standard */
+.login-card {
+  background: rgba(32, 32, 36, 0.6);
+  /* Translucent Glass */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  /* Subtle border */
+  padding: 3rem 2.5rem;
+  border-radius: var(--radius-lg);
+  width: 100%;
+  max-width: 420px;
+  text-align: center;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  z-index: 10;
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.login-card:hover {
+  transform: scale(1.03) translateY(-5px);
+  border-color: var(--primary);
+  box-shadow: 0 20px 50px rgba(130, 87, 229, 0.25);
+}
+
+/* Elegant Top Accent Line (Project Signature) */
+.login-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  opacity: 0.5;
+}
+
+/* Typography */
+.login-title {
+  font-family: 'Cinzel', serif;
+  font-size: 2rem;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+  letter-spacing: 1px;
+}
+
+.login-title span {
+  background: linear-gradient(90deg, #e1e1e6, var(--primary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.login-subtitle {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  margin-bottom: 2.5rem;
+  font-weight: 400;
+}
+
+/* Inputs - Enhanced Vitality */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.input-field {
+  background: rgba(32, 32, 36, 0.5);
+  /* Semi-transparent */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-sm);
+  padding: 16px 20px;
+  color: #fff;
+  font-size: 1rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 100%;
+  font-family: 'Outfit', sans-serif;
+  backdrop-filter: blur(5px);
+}
+
+.input-field:focus {
+  border-color: var(--primary);
+  background: rgba(130, 87, 229, 0.1);
+  box-shadow: 0 0 20px rgba(130, 87, 229, 0.2);
+  transform: translateY(-2px);
+  outline: none;
+}
+
+.input-field::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+/* Button - Matching Landing Page Energy */
+.button-login {
+  margin-top: 1.5rem;
+  background: #fff;
+  /* Fallback */
+  background: linear-gradient(90deg, #8257e5, #04d361);
+  border: none;
+  padding: 16px;
+  font-size: 1.1rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  border-radius: 100px;
+  /* Pill shape like Landing */
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 0 30px rgba(130, 87, 229, 0.4);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.button-login::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  right: 2px;
+  bottom: 2px;
+  background: rgba(32, 32, 36, 0.9);
+  /* Dark center for the border effect */
+  border-radius: 100px;
+  z-index: -1;
+  transition: opacity 0.3s;
+}
+
+.button-login:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 50px rgba(4, 211, 97, 0.6);
+  color: #121214;
+  /* Text turns dark on hover */
+}
+
+.button-login:hover::before {
+  opacity: 0;
+  /* Reveal full gradient on hover */
+}
+
+.button-login:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Enhanced Floating Icon */
+.login-icon {
+  font-size: 3.5rem;
+  margin-bottom: 1.2rem;
+  display: inline-block;
+  animation: float 5s ease-in-out infinite;
+  filter: drop-shadow(0 0 20px rgba(130, 87, 229, 0.5));
+}
+
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Atmospheric Elements (RPG Vibes) */
+.grid-overlay {
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  transform: perspective(600px) rotateX(60deg) translateY(-100px) translateZ(-200px);
+  animation: gridMove 25s linear infinite;
+  opacity: 0.2;
+  pointer-events: none;
+}
+
+.runes-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.rune {
+  position: absolute;
+  opacity: 0.1;
+  /* Slightly more subtle for text */
+  color: var(--primary);
+  font-family: 'Cinzel', serif;
+  /* RPG Font */
+  font-size: 1.2rem;
+  font-weight: 700;
+  white-space: nowrap;
+  letter-spacing: 2px;
+  animation: floatRune 10s infinite ease-in-out;
+  text-shadow: 0 0 10px var(--primary);
+  pointer-events: none;
+}
+
+/* Specific colors for specific texts if needed, or just let them float */
+.rune:nth-child(n) {
+  position: absolute;
+}
+
+/* Reset specific children positioning as it is now inline */
+
+@keyframes floatRune {
+
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 0.1;
+  }
+
+  50% {
+    transform: translateY(-30px) rotate(10deg);
+    opacity: 0.3;
+  }
+}
+
+@keyframes gridMove {
+  0% {
+    transform: perspective(600px) rotateX(60deg) translateY(0) translateZ(-200px);
+  }
+
+  100% {
+    transform: perspective(600px) rotateX(60deg) translateY(60px) translateZ(-200px);
+  }
+}

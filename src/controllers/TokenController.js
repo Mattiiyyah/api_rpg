@@ -15,23 +15,23 @@ class TokenController {
 
         if (!user) {
             return res.status(401).json({
-                errors: ['Usuario nao encontrado'],
+                errors: ['Usuário não encontrado'],
             });
         }
 
         if (!await user.passwordIsValid(password)) {
             return res.status(401).json({
-                errors: ['Senha invalida'],
+                errors: ['Senha inválida'],
             });
         }
 
-        const { id } = user;
+        const { id, nome, role } = user;
 
         const token = jwt.sign({ id, email }, process.env.TOKEN_SECRET, {
             expiresIn: process.env.TOKEN_EXPIRATION,
         });
 
-        return res.json({ token });
+        return res.json({ token, user: { id, nome, role } });
 
     }
 }

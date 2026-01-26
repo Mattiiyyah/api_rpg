@@ -14,6 +14,14 @@ class ArtefatoController {
             });
         }
 
+        const totalArtefatos = await Artefato.count();
+
+        if(totalArtefatos >= 20) {
+            return res.status(401).json({
+                errors: ['O mundo já está sobrecarregado com artefatos. Não é possível criar mais.'],
+            });
+        }
+
         const novoArtefato = await Artefato.create(req.body);
         const { id, nome, tipo, poder, lore } = novoArtefato;
 
