@@ -14,12 +14,16 @@ export default function Modal({ isOpen, title, children, onConfirm, onCancel, co
                     {children}
                 </div>
                 <div className="modal-actions">
-                    <button className="btn-cancel-modal" onClick={onCancel}>
-                        {cancelText}
-                    </button>
-                    <button className="btn-confirm-modal" onClick={onConfirm}>
-                        {confirmText}
-                    </button>
+                    {onCancel && (
+                        <button className="btn-cancel-modal" onClick={onCancel}>
+                            {cancelText}
+                        </button>
+                    )}
+                    {onConfirm && (
+                        <button className="btn-confirm-modal" onClick={onConfirm}>
+                            {confirmText}
+                        </button>
+                    )}
                 </div>
             </div>
         </div>

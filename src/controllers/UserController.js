@@ -61,6 +61,20 @@ class UserController {
      try {
         const users = await User.findAll({
             attributes: ['id', 'nome', 'email', 'role'],
+            include: [
+                { 
+                    model: Artefato, 
+                    attributes: ['nome', 'tipo', 'poder', 'lore'] 
+                },
+                { 
+                    model: Skill, 
+                    as: 'skills', 
+                    attributes: ['nome', 'dano', 'descricao'],
+                    through: { 
+                        attributes: ['nivel'] 
+                    }
+                }
+            ]
         });
         return res.json(users);
      }catch(e) {

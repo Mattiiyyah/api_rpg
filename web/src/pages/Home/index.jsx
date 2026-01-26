@@ -22,6 +22,10 @@ export default function Home() {
     // Modal State
     const [showDeleteModal, setShowDeleteModal] = useState(false);
 
+    // Inventory Details State
+    const [showDetails, setShowDetails] = useState(false);
+    const [selectedItem, setSelectedItem] = useState(null);
+
     const isAdmin = user?.role === 'KING' || user?.role === 'MASTER';
 
     useEffect(() => {
@@ -107,6 +111,11 @@ export default function Home() {
         }
     }
 
+    function abrirDetalhes(item) {
+        setSelectedItem(item);
+        setShowDetails(true);
+    }
+
     if (!user) return <></>;
 
     return (
@@ -121,6 +130,33 @@ export default function Home() {
             >
                 <p>Tem certeza que deseja apagar sua conta? Todas as suas conquistas, itens e histórias serão perdidas no Vazio Digital. 💀</p>
                 <p style={{ fontSize: '0.9rem', color: '#a8a8b3', marginTop: '10px' }}>Essa ação é irreversível.</p>
+            </Modal>
+
+            <Modal
+                isOpen={showDetails}
+                title={selectedItem?.nome || 'Detalhes do Item'}
+                onCancel={() => setShowDetails(false)}
+                cancelText="Fechar"
+            >
+                {selectedItem && (
+                    <div style={{ textAlign: 'left' }}>
+                        <div style={{ display: 'flex', gap: '15px', marginBottom: '15px', alignItems: 'center' }}>
+                            <span className="role-badge" style={{ backgroundColor: '#323238', color: '#ccc', width: 'fit-content', fontSize: '1rem' }}>
+                                {selectedItem.tipo === 'Arma' ? '⚔️' : selectedItem.tipo === 'Poção' ? '🧪' : selectedItem.tipo === 'Armadura' ? '🛡️' : selectedItem.tipo === 'Relíquia' ? '🔮' : '📦'} {selectedItem.tipo}
+                            </span>
+                            <span style={{ color: '#04d361', fontWeight: 'bold' }}>
+                                ⚡ Poder: {selectedItem.poder}
+                            </span>
+                        </div>
+
+                        <div style={{ marginTop: '15px', borderTop: '1px solid #323238', paddingTop: '15px' }}>
+                            <h4 style={{ marginBottom: '10px', color: '#e1e1e6' }}>📜 Lenda / Descrição</h4>
+                            <p style={{ color: '#a8a8b3', lineHeight: '1.6', whiteSpace: 'pre-wrap', fontSize: '0.95rem' }}>
+                                {selectedItem.lore || "Este item não possui inscrições sobre sua origem..."}
+                            </p>
+                        </div>
+                    </div>
+                )}
             </Modal>
 
             <div className="home-header">
@@ -190,12 +226,39 @@ export default function Home() {
                 )}
 
                 <h2>🎒 Seu Inventário</h2>
-                <div className="cards-grid">
-                    <div className="empty-card">
-                        <h3>Mochila Vazia</h3>
-                        <p>Você ainda não possui artefatos.</p>
+                {user?.Artefatos?.length > 0 ? (
+                    <div className="cards-grid">
+                        {user.Artefatos.map(item => (
+                            <div className="inventory-card" key={item.id} onClick={() => abrirDetalhes(item)} style={{ cursor: 'pointer' }}>
+                                <div className="inventory-header">
+                                    <div className="inventory-icon">
+                                        {item.tipo === 'Arma' ? '⚔️' : item.tipo === 'Poção' ? '🧪' : item.tipo === 'Armadura' ? '🛡️' : item.tipo === 'Relíquia' ? '🔮' : '📦'}
+                                    </div>
+                                    <div className="inventory-power">
+                                        ⚡ {item.poder}
+                                    </div>
+                                </div>
+
+                                <div className="inventory-body">
+                                    <h3 className="inventory-title">{item.nome}</h3>
+                                    <span className="inventory-type">{item.tipo}</span>
+
+                                    {item.lore && (
+                                        <p className="inventory-lore">
+                                            "{item.lore.length > 60 ? item.lore.substring(0, 60) + '...' : item.lore}"
+                                        </p>
+                                    )}
+                                </div>
+                            </div>
+                        ))}
                     </div>
-                </div>
+                ) : (
+                    <div className="cards-grid">
+                        <div className="empty-card">
+                            <h3>Mochila Vazia</h3>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );

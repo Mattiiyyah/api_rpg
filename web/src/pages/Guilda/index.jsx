@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import axios from '../../services/axios';
@@ -72,7 +72,7 @@ export default function Guilda() {
     }
 
     function lidandoComCancelar() {
-        limparFormulario();
+        limparFormulario(); // Usa a limpeza
         toast.info("Edição cancelada.");
     }
 
