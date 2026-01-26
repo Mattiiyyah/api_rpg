@@ -25,7 +25,7 @@ export default function Home() {
     const isAdmin = user?.role === 'KING' || user?.role === 'MASTER';
 
     useEffect(() => {
-        if (!user) navigate('/home');
+        if (!user) navigate('/');
     }, [user, navigate]);
 
     useEffect(() => {
@@ -42,7 +42,7 @@ export default function Home() {
                 console.log("Erro ao atualizar dados do usuário:", error);
                 if (error.response?.status === 401) {
                     localStorage.clear();
-                    navigate('/login');
+                    navigate('/');
                 }
             }
         }
@@ -52,7 +52,7 @@ export default function Home() {
     const lidandoComLogout = () => {
         localStorage.clear();
         setUser(null);
-        navigate('/home');
+        navigate('/');
     };
 
     function abrirEdicao() {
