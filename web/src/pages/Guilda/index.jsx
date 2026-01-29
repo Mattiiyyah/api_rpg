@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import axios from '../../services/axios';
 import '../Home/Home.css';
 import './Guilda.css';
 import Modal from '../../components/Modal';
+import MagicMouse from '../../components/MagicMouse';
 
 export default function Guilda() {
     const navigate = useNavigate();
@@ -25,7 +26,7 @@ export default function Guilda() {
     const [logado, setLogado] = useState(false);
     const [idEditar, setIdEditar] = useState(null);
     const [memberToDelete, setMemberToDelete] = useState(null);
-    
+
     // Modal State
     const [showModal, setShowModal] = useState(false);
 
@@ -72,7 +73,7 @@ export default function Guilda() {
     }
 
     function lidandoComCancelar() {
-        limparFormulario(); // Usa a limpeza
+        limparFormulario();
         toast.info("Edição cancelada.");
     }
 
@@ -91,7 +92,7 @@ export default function Guilda() {
         e.preventDefault();
         setLogado(true);
 
-        const token = localStorage.getItem('token'); 
+        const token = localStorage.getItem('token');
         const headers = { Authorization: `Bearer ${token}` };
 
         try {
@@ -186,6 +187,7 @@ export default function Guilda() {
 
     return (
         <div className="home-container">
+            <MagicMouse />
             <Modal
                 isOpen={showModal}
                 title="Banir Membro?"

@@ -5,6 +5,7 @@ import axios from '../../services/axios';
 import '../Home/Home.css';
 import '../Guilda/Guilda.css';
 import Modal from '../../components/Modal';
+import MagicMouse from '../../components/MagicMouse';
 
 export default function Artefato() {
 
@@ -233,6 +234,7 @@ export default function Artefato() {
 
     return (
         <div className="home-container">
+            <MagicMouse />
 
             <Modal
                 isOpen={showModal}

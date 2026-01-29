@@ -1,6 +1,7 @@
 import User from '../models/User.js';
 import Artefato from '../models/Artefato.js';
 import Skill from '../models/Skill.js';
+import UserSkill from '../models/UserSkill.js';
 
 class UserController {
    //store
@@ -260,6 +261,70 @@ class UserController {
        return res.json({ msg: `O nome de ${user.nome} foi riscado do Livro da Vida. Que sua alma encontre paz no Vazio Digital.` });
     
      } catch (e) {
+       return res.status(400).json({
+         errors: e.errors?.map((err) => err.message) || ['Ocorreu um erro inesperado.'],
+       });
+     }
+   }
+
+   async updateSkill(req, res) {
+     const isKing = req.userRole === 'KING';
+
+     try{
+        if (!isKing) {
+          return res.status(401).json({
+            errors: ['Somente o Rei pode modificar as habilidades dos aventureiros.']
+          })
+        }   
+
+        const userId = await User.findByPk(req.params.user_id);
+        
+        if(!userId) {
+          return res.status(404).json({ 
+            errors: ['Esta alma não consta nos registros do reino.'] 
+          });
+        }
+        
+        const skillId = await Skill.findByPk(req.params.skill_id);
+        
+        if(!skillId) {
+          return res.status(404).json({ 
+            errors: ['Esta habilidade não consta nos registros do reino.'] 
+          });
+        }
+
+        const userSkill = await UserSkill.findOne({
+          where: {
+            user_id: userId.id,
+            skill_id: skillId.id
+          }
+        });
+
+        if(!userSkill) {
+          return res.status(404).json({ 
+            errors: ['Usuário ou habilidade não encontrados no reino.'] 
+          });
+        }
+
+        const nivelUserSkill = req.body.nivel;
+
+        if(nivelUserSkill < 0) {
+          return res.status(401).json({
+            errors: ['Não é possível diminuir o nível de uma habilidade abaixo de 0.']
+          })
+        }
+
+        const updatedUserSkill = await userSkill.update({
+          nivel: req.body.nivel
+        });
+
+        return res.json({
+          msg: `O nivel da habilidade do aventureiro ${userId.nome} foi atualizado para ${updatedUserSkill.nivel}.`,
+          dados: updatedUserSkill
+        });
+
+
+     } catch(e) {
        return res.status(400).json({
          errors: e.errors?.map((err) => err.message) || ['Ocorreu um erro inesperado.'],
        });

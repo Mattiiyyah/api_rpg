@@ -9,6 +9,7 @@ import Home from './pages/Home';
 import Landing from './pages/Landing';
 import Guilda from './pages/Guilda';
 import Artefato from './pages/Artefato';
+import Skill from './pages/Skill';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/dashboard" element={<Home />} />
         <Route path="/guilda" element={<Guilda />} />
         <Route path="/artefatos" element={<Artefato />} />
+        <Route path="/skills" element={<Skill />} />
       </Routes>
 
       <ToastContainer autoClose={3000} theme="dark" />

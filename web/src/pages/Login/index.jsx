@@ -75,6 +75,9 @@ export default function Login() {
         <div className="rune text-rune" style={{ top: '85%', left: '60%', animationDelay: '2.2s' }}>Boss Fight</div>
       </div>
 
+
+
+
       <div className="login-welcome-tooltip">
         <span className="tooltip-icon">👋</span>
         <span>Aventureiro, faça seu login abaixo!</span>

@@ -1,7 +1,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up (queryInterface, Sequelize) {
-    await queryInterface.createTable('skills', { 
+  async up(queryInterface, Sequelize) {
+    await queryInterface.createTable('skills', {
       id: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -12,8 +12,12 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      tipo: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
       dano: {
-        type:Sequelize.FLOAT,
+        type: Sequelize.FLOAT,
         allowNull: false,
       },
       custo_mana: {
@@ -36,7 +40,7 @@ module.exports = {
 
   },
 
-  async down (queryInterface) {
-     await queryInterface.dropTable('skills');
+  async down(queryInterface) {
+    await queryInterface.dropTable('skills');
   }
 };

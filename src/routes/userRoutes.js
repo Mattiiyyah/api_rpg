@@ -11,4 +11,6 @@ router.get('/:id', loginRequired, userController.show); // visualizar usuário
 router.put('/:id', loginRequired, userController.update); // atualizar usuário
 router.delete('/:id', loginRequired, userController.delete); // deletar usuário
 
+router.patch('/:user_id/skills/:skill_id', loginRequired, userController.updateSkill); //upar a skill do usuário 
+
 export default router;

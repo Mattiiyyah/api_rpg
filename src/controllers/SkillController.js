@@ -8,9 +8,9 @@ class SkillController {
         const isMaster = req.userRole === 'MASTER';
         const isKing = req.userRole === 'KING';
 
-        try{
+        try {
 
-            if(!isMaster && !isKing) {
+            if (!isMaster && !isKing) {
                 return res.status(401).json({
                     errors: ['Você tenta criar uma habilidade, mas lhe falta conhecimento arcano. Apenas Mestres da Guilda possuem tal habilidade.'],
                 });
@@ -18,21 +18,21 @@ class SkillController {
 
             const totalSkills = await Skill.count();
 
-            if(totalSkills >= 10) {
+            if (totalSkills >= 10) {
                 return res.status(401).json({
                     errors: ['O mundo já está sobrecarregado com habilidades. Não é possível criar mais.'],
                 });
             }
 
             const novaSkill = await Skill.create(req.body);
-            const { id, nome, dano, custo_mana, descricao } = novaSkill;
+            const { id, nome, tipo, dano, custo_mana, descricao } = novaSkill;
 
             return res.json({
                 msg: "As energias mágicas se agitam e uma nova habilidade surge no mundo!",
-                skill: { id, nome, dano, custo_mana, descricao },
+                skill: { id, nome, tipo, dano, custo_mana, descricao },
             })
-            
-        } catch(e) {
+
+        } catch (e) {
             return res.status(400).json({
                 errors: e.errors?.map(err => err.message) || ['Ocorreu um erro inesperado.']
             })
@@ -41,37 +41,37 @@ class SkillController {
 
     //index 
     async index(req, res) {
-        try{
+        try {
             const skills = await Skill.findAll({
-                attributes: ['id', 'nome', 'dano', 'custo_mana', 'descricao'],
+                attributes: ['id', 'nome', 'tipo', 'dano', 'custo_mana', 'descricao'],
             });
 
             return res.json(skills);
-        } catch(e) {
+        } catch (e) {
             return res.status(400).json({
                 errors: e.errors?.map(err => err.message) || ['Ocorreu um erro inesperado.'],
             })
-        } 
+        }
     }
 
     //show
     async show(req, res) {
-        try{
+        try {
             const skill = await Skill.findByPk(req.params.id);
 
-            if(!skill) {
+            if (!skill) {
                 return res.status(404).json({
                     errors: ['Esta habilidade se perdeu nas névoas do tempo (Não encontrada).'],
                 });
             }
 
-            const { id, nome, dano, custo_mana, descricao } = skill;
-            return res.json({ id, nome, dano, custo_mana, descricao });
-        } catch(e) {
+            const { id, nome, tipo, dano, custo_mana, descricao } = skill;
+            return res.json({ id, nome, tipo, dano, custo_mana, descricao });
+        } catch (e) {
             return res.status(400).json({
                 errors: e.errors?.map(err => err.message) || ['Ocorreu um erro inesperado.'],
             });
-        } 
+        }
     }
 
     //update
@@ -80,36 +80,36 @@ class SkillController {
         const isMaster = req.userRole === 'MASTER';
         const isKing = req.userRole === 'KING';
 
-        try{ 
+        try {
             const skill = await Skill.findByPk(req.params.id);
 
-            if(!skill) {
+            if (!skill) {
                 return res.status(404).json({
                     errors: ['Esta habilidade se perdeu nas névoas do tempo (Não encontrada).'],
                 });
             }
 
-            if(!isMaster && !isKing) {
+            if (!isMaster && !isKing) {
                 return res.status(401).json({
                     errors: ['Um golem de pedra bloqueia seu caminho. Apenas o Rei pode alterar a essência de uma habilidade.'],
                 });
             }
 
-            if(!isKing) {
+            if (!isKing) {
                 return res.status(401).json({
                     errors: ['BLASFÊMIA! Seu poder é ineficiente para alterar a essência de uma habilidade te falta mais poder ou conhecimento arcano.'],
                 });
             }
 
             const skillAtualizada = await skill.update(req.body);
-            const { id, nome, dano, custo_mana, descricao } = skillAtualizada;
+            const { id, nome, tipo, dano, custo_mana, descricao } = skillAtualizada;
 
             return res.json({
                 msg: "Uma luz dourada emana da habilidade, confirmando a alteração.",
-                skill: { id, nome, dano, custo_mana, descricao },
+                skill: { id, nome, tipo, dano, custo_mana, descricao },
             });
 
-        } catch(e) {
+        } catch (e) {
             return res.status(400).json({
                 errors: e.errors?.map(err => err.message) || ['Ocorreu um erro inesperado.'],
             });
@@ -124,19 +124,19 @@ class SkillController {
         try {
             const skill = await Skill.findByPk(req.params.id);
 
-            if(!skill) {
+            if (!skill) {
                 return res.status(404).json({
                     errors: ['Esta habilidade se perdeu nas névoas do tempo (Não encontrada).'],
                 });
             }
 
-            if(!isMaster && !isKing) {
+            if (!isMaster && !isKing) {
                 return res.status(401).json({
                     errors: ['Um golem de pedra bloqueia seu caminho. Apenas o Rei pode excluir uma habilidade.'],
                 });
             }
 
-            if(!isKing) {
+            if (!isKing) {
                 return res.status(401).json({
                     errors: ['BLASFÊMIA! Seu poder é ineficiente para excluir uma habilidade te falta mais poder ou conhecimento arcano.'],
                 });
@@ -148,7 +148,7 @@ class SkillController {
                 msg: "A habilidade se desfaz em poeira estelar, seu conhecimento perdido para sempre.",
             });
 
-        } catch(e) {
+        } catch (e) {
             return res.status(400).json({
                 errors: e.errors?.map(err => err.message) || ['Ocorreu um erro inesperado.'],
             });
@@ -160,7 +160,7 @@ class SkillController {
             const user = req.userId;
             const skill = await Skill.findByPk(req.params.id);
 
-            if(!skill) {
+            if (!skill) {
                 return res.status(404).json({
                     errors: ['Esta habilidade se perdeu nas névoas do tempo (Não encontrada).'],
                 });
@@ -173,7 +173,7 @@ class SkillController {
                 },
             });
 
-            if(userSkill) {
+            if (userSkill) {
                 return res.status(400).json({
                     errors: ['Esta habilidade já foi aprendida por você.'],
                 });
@@ -190,7 +190,7 @@ class SkillController {
             });
 
 
-        } catch(e) {
+        } catch (e) {
             return res.status(400).json({
                 errors: e.errors?.map(err => err.message) || ['Ocorreu um erro inesperado.'],
             });

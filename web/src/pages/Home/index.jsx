@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import axios from '../../services/axios';
 import './Home.css';
 import Modal from '../../components/Modal';
+import MagicMouse from '../../components/MagicMouse';
 
 export default function Home() {
     const navigate = useNavigate();
@@ -120,6 +121,7 @@ export default function Home() {
 
     return (
         <div className="home-container">
+            <MagicMouse />
             <Modal
                 isOpen={showDeleteModal}
                 title="Excluir Conta?"
