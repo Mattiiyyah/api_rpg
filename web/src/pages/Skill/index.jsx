@@ -34,6 +34,14 @@ export default function Skill() {
     const [showDetails, setShowDetails] = useState(false);
     const [selectedSkill, setSelectedSkill] = useState(null);
 
+    const [showModalLearn, setShowModalLearn] = useState(false);
+    const [skillToLearn, setSkillToLearn] = useState(null);
+
+    const [learnedSkillIds, setLearnedSkillIds] = useState(() => {
+        const userSkills = user?.UserSkill || [];
+        return userSkills.map(us => us.skill_id);
+    });
+
     const isAdmin = user?.role === 'KING' || user?.role === 'MASTER';
     const isKing = user?.role === 'KING';
 
@@ -53,8 +61,15 @@ export default function Skill() {
             };
             try {
                 if (user) {
-                    const response = await axios.get('/skills', { headers });
-                    setSkills(response.data);
+                    // Busca todas as skills
+                    const skillsResponse = await axios.get('/skills', { headers });
+                    setSkills(skillsResponse.data);
+
+                    // Busca os dados do usuário para pegar as skills que ele já aprendeu
+                    const usuarioResponse = await axios.get(`/users/${user.id}`, { headers });
+                    const skillsDoUsuario = usuarioResponse.data.skills || [];
+                    const idsAprendidos = skillsDoUsuario.map(skill => skill.id);
+                    setLearnedSkillIds(idsAprendidos);
                 }
             } catch (error) {
                 console.log("Erro ao carregar skills:", error);
@@ -170,6 +185,28 @@ export default function Skill() {
         }
     }
 
+    function abrirModalLearn(skill) {
+        setSkillToLearn(skill);
+        setShowModalLearn(true);
+    }
+
+    async function confirmLearn() {
+        if (!skillToLearn) return;
+
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.post(`/skills/${skillToLearn.id}/aprender`, {}, { headers: { Authorization: `Bearer ${token}` } });
+            toast.success(response.data.msg);
+            setLearnedSkillIds(prev => [...prev, skillToLearn.id]);
+        } catch (err) {
+            const errors = err.response?.data?.errors || [];
+            if (errors.length > 0) errors.map(error => toast.error(error));
+        } finally {
+            setShowModalLearn(false);
+            setSkillToLearn(null);
+        }
+    }
+
     function abrirDetalhes(skill) {
         setSelectedSkill(skill);
         setShowDetails(true);
@@ -249,6 +286,17 @@ export default function Skill() {
                         </div>
                     </div>
                 )}
+            </Modal>
+
+            <Modal
+                isOpen={showModalLearn}
+                title="Confirmar Aprendizagem"
+                onConfirm={confirmLearn}
+                onCancel={() => setShowModalLearn(false)}
+                confirmText="Sim, Aprender!"
+                cancelText="Cancelar"
+            >
+                <p>Tem certeza que deseja aprender a habilidade <strong>{skillToLearn?.nome}</strong>?</p>
             </Modal>
 
 
@@ -367,53 +415,67 @@ export default function Skill() {
 
 
                 <div className="members-grid">
-                    {skills.map((skill) => (
-                        <div key={skill.id} className="member-card" onClick={() => abrirDetalhes(skill)} style={{ cursor: 'pointer' }}>
+                    {skills.map((skill) => {
+                        const jaAprendi = learnedSkillIds.includes(skill.id);
+
+                        return (
+                            <div key={skill.id} className="member-card" onClick={() => abrirDetalhes(skill)} style={{ cursor: 'pointer' }}>
 
 
-                            <div className="member-avatar" style={{ color: '#8257e5', borderColor: '#8257e5' }}>
-                                {skill.tipo === 'Cura' ? '💖' : skill.tipo === 'Defesa' ? '🛡️' : skill.tipo === 'Ataque' ? '⚔️' : skill.tipo === 'Buff' ? '✨' : skill.tipo === 'Debuff' ? '💀' : '⚡'}
-                            </div>
+                                <div className="member-avatar" style={{ color: '#8257e5', borderColor: '#8257e5' }}>
+                                    {skill.tipo === 'Cura' ? '💖' : skill.tipo === 'Defesa' ? '🛡️' : skill.tipo === 'Ataque' ? '⚔️' : skill.tipo === 'Buff' ? '✨' : skill.tipo === 'Debuff' ? '💀' : '⚡'}
+                                </div>
 
 
-                            <div className="member-info">
-                                <small>ID: {skill.id}</small>
+                                <div className="member-info">
+                                    <small>ID: {skill.id}</small>
 
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                    <strong>{skill.nome}</strong>
-                                    {skill.tipo && (
-                                        <span className="role-badge" style={{ backgroundColor: '#202024', border: '1px solid #323238', fontSize: '0.7rem' }}>
-                                            {skill.tipo}
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                        <strong>{skill.nome}</strong>
+                                        {skill.tipo && (
+                                            <span className="role-badge" style={{ backgroundColor: '#202024', border: '1px solid #323238', fontSize: '0.7rem' }}>
+                                                {skill.tipo}
+                                            </span>
+                                        )}
+                                    </div>
+
+
+                                    <div style={{ display: 'flex', gap: '15px', marginTop: '8px', fontSize: '0.9rem' }}>
+                                        <span style={{ color: '#ff4d4d', fontWeight: 'bold' }}>
+                                            ⚔️ {skill.dano}
                                         </span>
+                                        <span style={{ color: '#04d361', fontWeight: 'bold' }}>
+                                            💧 {skill.custo_mana !== undefined ? skill.custo_mana : skill.custo}
+                                        </span>
+                                    </div>
+
+                                    <p style={{ fontSize: '0.8rem', color: '#7c7c8a', marginTop: '8px', fontStyle: 'italic', lineHeight: '1.4' }}>
+                                        "{skill.descricao ? (skill.descricao.length > 50 ? skill.descricao.substring(0, 50) + '...' : skill.descricao) : "Uma magia misteriosa..."}"
+                                    </p>
+                                </div>
+
+
+                                <div className="member-actions" onClick={(e) => e.stopPropagation()}>
+                                    {isKing && (
+                                        <>
+                                            <button className="btn-action edit" onClick={() => lidandoComEditar(skill.id, skill.nome, skill.tipo, skill.dano, skill.custo_mana, skill.descricao)}>✏️</button>
+                                            <button className="btn-action delete" onClick={() => abrirModalDelete(skill)}>🗑️</button>
+                                        </>
+                                    )}
+
+                                    {jaAprendi ? (
+                                        <button className="btn-action learn" disabled>
+                                            🧐
+                                        </button>
+                                    ) : (
+                                        <button className="btn-action learn" onClick={() => abrirModalLearn(skill)}>
+                                            🧠
+                                        </button>
                                     )}
                                 </div>
-
-
-                                <div style={{ display: 'flex', gap: '15px', marginTop: '8px', fontSize: '0.9rem' }}>
-                                    <span style={{ color: '#ff4d4d', fontWeight: 'bold' }}>
-                                        ⚔️ {skill.dano}
-                                    </span>
-                                    <span style={{ color: '#04d361', fontWeight: 'bold' }}>
-                                        💧 {skill.custo_mana !== undefined ? skill.custo_mana : skill.custo}
-                                    </span>
-                                </div>
-
-                                <p style={{ fontSize: '0.8rem', color: '#7c7c8a', marginTop: '8px', fontStyle: 'italic', lineHeight: '1.4' }}>
-                                    "{skill.descricao ? (skill.descricao.length > 50 ? skill.descricao.substring(0, 50) + '...' : skill.descricao) : "Uma magia misteriosa..."}"
-                                </p>
                             </div>
-
-
-                            <div className="member-actions" onClick={(e) => e.stopPropagation()}>
-                                {isKing && (
-                                    <>
-                                        <button className="btn-action edit" onClick={() => lidandoComEditar(skill.id, skill.nome, skill.tipo, skill.dano, skill.custo_mana, skill.descricao)}>✏️</button>
-                                        <button className="btn-action delete" onClick={() => abrirModalDelete(skill)}>🗑️</button>
-                                    </>
-                                )}
-                            </div>
-                        </div>
-                    ))}
+                        );
+                    })}
                 </div>
             </div>
         </div>

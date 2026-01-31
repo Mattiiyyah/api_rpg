@@ -22,10 +22,15 @@ export default function Home() {
 
     // Modal State
     const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [showLogoutModal, setShowLogoutModal] = useState(false);
 
     // Inventory Details State
     const [showDetails, setShowDetails] = useState(false);
     const [selectedItem, setSelectedItem] = useState(null);
+
+    // Skill Details State
+    const [showSkillDetails, setShowSkillDetails] = useState(false);
+    const [selectedSkill, setSelectedSkill] = useState(null);
 
     const isAdmin = user?.role === 'KING' || user?.role === 'MASTER';
 
@@ -59,6 +64,10 @@ export default function Home() {
         setUser(null);
         navigate('/');
     };
+
+    function abrirModalLogout() {
+        setShowLogoutModal(true);
+    }
 
     function abrirEdicao() {
         setEditandoPerfil(true);
@@ -117,6 +126,11 @@ export default function Home() {
         setShowDetails(true);
     }
 
+    function abrirDetalhesSkill(skill) {
+        setSelectedSkill(skill);
+        setShowSkillDetails(true);
+    }
+
     if (!user) return <></>;
 
     return (
@@ -134,6 +148,17 @@ export default function Home() {
                 <p style={{ fontSize: '0.9rem', color: '#a8a8b3', marginTop: '10px' }}>Essa ação é irreversível.</p>
             </Modal>
 
+            <Modal
+                isOpen={showLogoutModal}
+                title="🚪 Deixar a Guilda?"
+                onConfirm={lidandoComLogout}
+                onCancel={() => setShowLogoutModal(false)}
+                confirmText="Partir em Jornada"
+                cancelText="Ficar mais um pouco"
+            >
+                <p>{user?.role}, <strong>{user?.nome}</strong>, você realmente deseja deixar a Guilda por agora?</p>
+                <p style={{ fontSize: '0.9rem', color: '#a8a8b3', marginTop: '10px' }}>O portal se fechará e você precisará provar sua identidade novamente para retornar. ✨</p>
+            </Modal>
             <Modal
                 isOpen={showDetails}
                 title={selectedItem?.nome || 'Detalhes do Item'}
@@ -155,6 +180,45 @@ export default function Home() {
                             <h4 style={{ marginBottom: '10px', color: '#e1e1e6' }}>📜 Lenda / Descrição</h4>
                             <p style={{ color: '#a8a8b3', lineHeight: '1.6', whiteSpace: 'pre-wrap', fontSize: '0.95rem' }}>
                                 {selectedItem.lore || "Este item não possui inscrições sobre sua origem..."}
+                            </p>
+                        </div>
+                    </div>
+                )}
+            </Modal>
+
+            <Modal
+                isOpen={showSkillDetails}
+                title={selectedSkill?.nome || 'Detalhes da Habilidade'}
+                onCancel={() => setShowSkillDetails(false)}
+                cancelText="Fechar"
+            >
+                {selectedSkill && (
+                    <div style={{ textAlign: 'left' }}>
+                        <div style={{ display: 'flex', gap: '15px', marginBottom: '15px', alignItems: 'center', flexWrap: 'wrap' }}>
+                            {selectedSkill.tipo && (
+                                <span className="role-badge" style={{ backgroundColor: '#202024', border: '1px solid #323238', fontSize: '0.9rem' }}>
+                                    {selectedSkill.tipo === 'Cura' ? '💖' : selectedSkill.tipo === 'Defesa' ? '🛡️' : selectedSkill.tipo === 'Ataque' ? '⚔️' : selectedSkill.tipo === 'Buff' ? '✨' : selectedSkill.tipo === 'Debuff' ? '💀' : '⚡'} {selectedSkill.tipo}
+                                </span>
+                            )}
+                            <span style={{ color: '#ff4d4d', fontWeight: 'bold' }}>
+                                ⚔️ Dano: {selectedSkill.dano}
+                            </span>
+                            <span style={{
+                                background: 'linear-gradient(135deg, #8257e5 0%, #6833e4 100%)',
+                                color: '#fff',
+                                padding: '4px 12px',
+                                borderRadius: '12px',
+                                fontSize: '0.75rem',
+                                fontWeight: 'bold'
+                            }}>
+                                ⭐ Nível {selectedSkill.UserSkill?.nivel || 1}
+                            </span>
+                        </div>
+
+                        <div style={{ marginTop: '15px', borderTop: '1px solid #323238', paddingTop: '15px' }}>
+                            <h4 style={{ marginBottom: '10px', color: '#e1e1e6' }}>📜 Descrição / Efeito</h4>
+                            <p style={{ color: '#a8a8b3', lineHeight: '1.6', whiteSpace: 'pre-wrap', fontSize: '0.95rem' }}>
+                                {selectedSkill.descricao || "Uma magia misteriosa..."}
                             </p>
                         </div>
                     </div>
@@ -189,7 +253,7 @@ export default function Home() {
 
                     <button className="btn-edit" onClick={abrirEdicao}>⚙️ Editar</button>
                     <button className="btn-delete-account" onClick={excluirConta} title="Excluir Minha Conta">💀</button>
-                    <button onClick={lidandoComLogout} className="btn-logout">Sair</button>
+                    <button onClick={abrirModalLogout} className="btn-logout">Sair</button>
                 </div>
             </div>
 
@@ -227,41 +291,96 @@ export default function Home() {
                     </div>
                 )}
 
-                <h2>🎒 Seu Inventário</h2>
-                {user?.Artefatos?.length > 0 ? (
-                    <div className="cards-grid">
-                        {user.Artefatos.map(item => (
-                            <div className="inventory-card" key={item.id} onClick={() => abrirDetalhes(item)} style={{ cursor: 'pointer' }}>
-                                <div className="inventory-header">
-                                    <div className="inventory-icon">
-                                        {item.tipo === 'Arma' ? '⚔️' : item.tipo === 'Poção' ? '🧪' : item.tipo === 'Armadura' ? '🛡️' : item.tipo === 'Relíquia' ? '🔮' : '📦'}
-                                    </div>
-                                    <div className="inventory-power">
-                                        ⚡ {item.poder}
-                                    </div>
-                                </div>
+                <div style={{ display: 'flex', gap: '30px', flexWrap: 'wrap' }}>
+                    {/* Coluna do Inventário */}
+                    <div style={{ flex: '1', minWidth: '300px' }}>
+                        <h2>🎒 Seu Inventário</h2>
+                        {user?.Artefatos?.length > 0 ? (
+                            <div className="cards-grid">
+                                {user.Artefatos.map(item => (
+                                    <div className="inventory-card" key={item.id} onClick={() => abrirDetalhes(item)} style={{ cursor: 'pointer' }}>
+                                        <div className="inventory-header">
+                                            <div className="inventory-icon">
+                                                {item.tipo === 'Arma' ? '⚔️' : item.tipo === 'Poção' ? '🧪' : item.tipo === 'Armadura' ? '🛡️' : item.tipo === 'Relíquia' ? '🔮' : '📦'}
+                                            </div>
+                                            <div className="inventory-power">
+                                                ⚡ {item.poder}
+                                            </div>
+                                        </div>
 
-                                <div className="inventory-body">
-                                    <h3 className="inventory-title">{item.nome}</h3>
-                                    <span className="inventory-type">{item.tipo}</span>
+                                        <div className="inventory-body">
+                                            <h3 className="inventory-title">{item.nome}</h3>
+                                            <span className="inventory-type">{item.tipo}</span>
 
-                                    {item.lore && (
-                                        <p className="inventory-lore">
-                                            "{item.lore.length > 60 ? item.lore.substring(0, 60) + '...' : item.lore}"
-                                        </p>
-                                    )}
+                                            {item.lore && (
+                                                <p className="inventory-lore">
+                                                    "{item.lore.length > 60 ? item.lore.substring(0, 60) + '...' : item.lore}"
+                                                </p>
+                                            )}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="cards-grid">
+                                <div className="empty-card">
+                                    <h3>Mochila Vazia</h3>
                                 </div>
                             </div>
-                        ))}
+                        )}
                     </div>
-                ) : (
-                    <div className="cards-grid">
-                        <div className="empty-card">
-                            <h3>Mochila Vazia</h3>
-                        </div>
+
+                    {/* Coluna das Habilidades */}
+                    <div style={{ flex: '1', minWidth: '300px' }}>
+                        <h2>✨ Suas Habilidades</h2>
+                        {user?.skills?.length > 0 ? (
+                            <div className="cards-grid">
+                                {user.skills.map(skill => (
+                                    <div className="inventory-card" key={skill.id} onClick={() => abrirDetalhesSkill(skill)} style={{ cursor: 'pointer' }}>
+                                        <div className="inventory-header">
+                                            <div className="inventory-icon" style={{ color: '#8257e5' }}>
+                                                {skill.tipo === 'Cura' ? '💖' : skill.tipo === 'Defesa' ? '🛡️' : skill.tipo === 'Ataque' ? '⚔️' : skill.tipo === 'Buff' ? '✨' : skill.tipo === 'Debuff' ? '💀' : '⚡'}
+                                            </div>
+                                            <div className="inventory-power" style={{ display: 'flex', gap: '10px' }}>
+                                                <span style={{ color: '#ff4d4d' }}>⚔️ {skill.dano}</span>
+                                            </div>
+                                        </div>
+
+                                        <div className="inventory-body">
+                                            <h3 className="inventory-title">{skill.nome}</h3>
+                                            <span style={{
+                                                background: 'linear-gradient(135deg, #8257e5 0%, #6833e4 100%)',
+                                                color: '#fff',
+                                                padding: '4px 12px',
+                                                borderRadius: '12px',
+                                                fontSize: '0.75rem',
+                                                fontWeight: 'bold',
+                                                display: 'inline-block',
+                                                boxShadow: '0 2px 8px rgba(130, 87, 229, 0.3)'
+                                            }}>
+                                                ⭐ Nível {skill.UserSkill?.nivel || 1}
+                                            </span>
+
+                                            {skill.descricao && (
+                                                <p className="inventory-lore">
+                                                    "{skill.descricao.length > 60 ? skill.descricao.substring(0, 60) + '...' : skill.descricao}"
+                                                </p>
+                                            )}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="cards-grid">
+                                <div className="empty-card">
+                                    <h3>Nenhuma Habilidade</h3>
+                                    <p style={{ fontSize: '0.9rem', color: '#7c7c8a', marginTop: '10px' }}>Visite o Grimório!</p>
+                                </div>
+                            </div>
+                        )}
                     </div>
-                )}
+                </div>
             </div>
-        </div>
+        </div >
     );
 }
