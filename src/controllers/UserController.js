@@ -88,6 +88,17 @@ class UserController {
   //show
   async show(req, res) {
     try {
+      const isMaster = req.userRole === 'MASTER';
+      const isKing = req.userRole === 'KING';
+      const isOwnProfile = req.userId === parseInt(req.params.id, 10);
+
+      // Permite se for KING/MASTER ou se for o próprio usuário vendo seu perfil
+      if (!isMaster && !isKing && !isOwnProfile) {
+        return res.status(401).json({
+          errors: ['Apenas o Rei ou o Mestre da Guilda podem consultar os registros de outros aventureiros.']
+        });
+      }
+
       const user = await User.findByPk(req.params.id, {
         attributes: ['id', 'nome', 'email', 'role'],
         include: [
@@ -110,21 +121,7 @@ class UserController {
         return res.status(404).json({ errors: ['Esta alma não consta nos registros do reino.'] });
       }
 
-      const isMaster = req.userRole === 'MASTER';
-      const isKing = req.userRole === 'KING';
-      const isSelf = req.userId === user.id;
-
-      if (isMaster || isKing || isSelf) {
-        return res.json(user);
-      }
-
-      return res.json({
-        id: user.id,
-        nome: user.nome,
-        role: user.role,
-        Artefatos: user.Artefatos,
-        skills: user.skills
-      });
+      return res.json(user);
 
     } catch (e) {
       return res.status(400).json({

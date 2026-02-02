@@ -1,26 +1,24 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import axios from '../../services/axios';
-import './Home.css';
+import '../Home/Home.css';
 import Modal from '../../components/Modal';
 import MagicMouse from '../../components/MagicMouse';
 
-export default function Home() {
-    const navigate = useNavigate();
+export default function User() {
 
-    const [user, setUser] = useState(() => {
+    const navigate = useNavigate();
+    const { id } = useParams();
+
+    const [profile, setProfile] = useState(null);
+
+    const [user] = useState(() => {
         const localUser = localStorage.getItem('user');
         return localUser ? JSON.parse(localUser) : null;
     });
 
-    const [editandoPerfil, setEditandoPerfil] = useState(false);
-    const [novoNome, setNovoNome] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
-
-    // Modal State
-    const [showDeleteModal, setShowDeleteModal] = useState(false);
-    const [showLogoutModal, setShowLogoutModal] = useState(false);
+    const isAdmin = user?.role === 'KING' || user?.role === 'MASTER';
 
     // Inventory Details State
     const [showDetails, setShowDetails] = useState(false);
@@ -30,90 +28,35 @@ export default function Home() {
     const [showSkillDetails, setShowSkillDetails] = useState(false);
     const [selectedSkill, setSelectedSkill] = useState(null);
 
-    const isAdmin = user?.role === 'KING' || user?.role === 'MASTER';
+    useEffect(() => {
+        if (!user) {
+            navigate('/login');
+            return;
+        }
+        if (!isAdmin) {
+            toast.error("Acesso negado. Apenas para o Rei ou Mestre.");
+            navigate('/dashboard');
+        }
+    }, [user, isAdmin, navigate]);
 
     useEffect(() => {
-        if (!user) navigate('/login');
-    }, [user, navigate]);
-
-    useEffect(() => {
-        async function loadUserData() {
+        async function loadUser() {
             const token = localStorage.getItem('token');
-            if (!token || !user?.id) return;
+            if (!token) return;
+            const headers = { Authorization: `Bearer ${token}` };
 
             try {
-                const response = await axios.get(`/users/${user.id}`, {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
-                setUser(prev => ({ ...prev, ...response.data }));
-            } catch (error) {
-                console.log("Erro ao atualizar dados do usuário:", error);
-                if (error.response?.status === 401) {
-                    localStorage.clear();
-                    navigate('/');
+                if (id) {
+                    const responseUser = await axios.get(`/users/${id}`, { headers });
+                    setProfile(responseUser.data);
                 }
+            } catch (error) {
+                console.log(error);
+                toast.error("Erro ao carregar usuário.");
             }
         }
-        loadUserData();
-    }, [user?.id, navigate]);
-
-    const lidandoComLogout = () => {
-        localStorage.clear();
-        setUser(null);
-        navigate('/');
-    };
-
-    function abrirModalLogout() {
-        setShowLogoutModal(true);
-    }
-
-    function abrirEdicao() {
-        setEditandoPerfil(true);
-        setNovoNome(user.nome);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    async function salvarPerfil(e) {
-        e.preventDefault();
-        setIsLoading(true);
-        const token = localStorage.getItem('token');
-
-        try {
-            const response = await axios.put(`/users/${user.id}`, {
-                nome: novoNome,
-            }, { headers: { Authorization: `Bearer ${token}` } });
-
-            toast.success(response.data.msg);
-            setUser(prev => ({ ...prev, nome: novoNome }));
-            setEditandoPerfil(false);
-        } catch (err) {
-            const errors = err.response?.data?.errors || [];
-            if (errors.length > 0) errors.map(error => toast.error(error));
-            else toast.error("Erro ao atualizar perfil.");
-        } finally {
-            setIsLoading(false);
-        }
-    }
-
-    function excluirConta() {
-        setShowDeleteModal(true);
-    }
-
-    async function confirmDelete() {
-        try {
-            const token = localStorage.getItem('token');
-            const response = await axios.delete(`/users/${user.id}`, { headers: { Authorization: `Bearer ${token}` } });
-            toast.info(response.data.msg);
-            lidandoComLogout();
-        } catch (err) {
-            console.log(err);
-            const errors = err.response?.data?.errors || [];
-            if (errors.length > 0) errors.map(error => toast.error(error));
-            else toast.error("Erro ao excluir conta.");
-        } finally {
-            setShowDeleteModal(false);
-        }
-    }
+        loadUser();
+    }, [isAdmin, id]);
 
     function abrirDetalhes(item) {
         setSelectedItem(item);
@@ -125,34 +68,13 @@ export default function Home() {
         setShowSkillDetails(true);
     }
 
-    if (!user) return <></>;
+    if (!profile) return <div className="home-container"><MagicMouse /><p style={{ color: '#a8a8b3' }}>Carregando perfil...</p></div>;
 
     return (
         <div className="home-container">
             <MagicMouse />
-            <Modal
-                isOpen={showDeleteModal}
-                title="Excluir Conta?"
-                onConfirm={confirmDelete}
-                onCancel={() => setShowDeleteModal(false)}
-                confirmText="Excluir Para Sempre"
-                cancelText="Cancelar"
-            >
-                <p>Tem certeza que deseja apagar sua conta? Todas as suas conquistas, itens e histórias serão perdidas no Vazio Digital. 💀</p>
-                <p style={{ fontSize: '0.9rem', color: '#a8a8b3', marginTop: '10px' }}>Essa ação é irreversível.</p>
-            </Modal>
 
-            <Modal
-                isOpen={showLogoutModal}
-                title="🚪 Deixar a Guilda?"
-                onConfirm={lidandoComLogout}
-                onCancel={() => setShowLogoutModal(false)}
-                confirmText="Partir em Jornada"
-                cancelText="Ficar mais um pouco"
-            >
-                <p>{user?.role}, <strong>{user?.nome}</strong>, você realmente deseja deixar a Guilda por agora?</p>
-                <p style={{ fontSize: '0.9rem', color: '#a8a8b3', marginTop: '10px' }}>O portal se fechará e você precisará provar sua identidade novamente para retornar. ✨</p>
-            </Modal>
+            {/* Modal Detalhes do Item */}
             <Modal
                 isOpen={showDetails}
                 title={selectedItem?.nome || 'Detalhes do Item'}
@@ -180,6 +102,7 @@ export default function Home() {
                 )}
             </Modal>
 
+            {/* Modal Detalhes da Skill */}
             <Modal
                 isOpen={showSkillDetails}
                 title={selectedSkill?.nome || 'Detalhes da Habilidade'}
@@ -219,65 +142,28 @@ export default function Home() {
                 )}
             </Modal>
 
+            {/* Header com info do perfil */}
             <div className="home-header">
-                <h1>SudoGestor 🎲</h1>
-
-                <div className="header-actions">
-                    {isAdmin && (
-                        <>
-                            <button onClick={() => navigate('/guilda')} className="btn-recruit" style={{ background: '#8257e5', border: 'none' }}>
-                                👥 Gerenciar Mesa
-                            </button>
-                        </>
-                    )}
-                    <button onClick={() => navigate('/artefatos')} className="btn-recruit" style={{ background: '#2563eb', border: 'none' }}>
-                        🔮 Artefatos
-                    </button>
-                    <button onClick={() => navigate('/skills')} className="btn-recruit" style={{ background: '#d97706', border: 'none' }}>
-                        ⚡ Skills
-                    </button>
-                </div>
-
+                <h1>📜 Perfil do Aventureiro</h1>
 
                 <div className="user-info">
                     <div className="user-details">
-                        <span className="user-name">{user.nome}</span>
-                        <span className={`role-badge role-${user.role.toLowerCase()}`}>{user.role}</span>
+                        <span className="user-name">{profile.nome}</span>
+                        <span className={`role-badge role-${profile.role.toLowerCase()}`}>{profile.role}</span>
                     </div>
-
-                    <button className="btn-edit" onClick={abrirEdicao}>⚙️ Editar</button>
-                    <button className="btn-delete-account" onClick={excluirConta} title="Excluir Minha Conta">💀</button>
-                    <button onClick={abrirModalLogout} className="btn-logout">Sair</button>
+                    <button className="btn-logout" onClick={() => navigate(-1)}>← Voltar</button>
                 </div>
             </div>
 
             <div className="content-area">
-
-                {editandoPerfil && (
-                    <div className="recruit-section">
-                        <h2>⚙️ Editando Seu Perfil</h2>
-                        <form onSubmit={salvarPerfil} className="recruit-form">
-                            <div>
-                                <label>Nome</label>
-                                <input type="text" className="input-dark" value={novoNome} onChange={e => setNovoNome(e.target.value)} />
-                            </div>
-
-                            <div style={{ display: 'flex', gap: '10px' }}>
-                                <button type="submit" className="btn-recruit" disabled={isLoading}>{isLoading ? '...' : 'Salvar Alterações'}</button>
-                                <button type="button" className="btn-cancel" onClick={() => setEditandoPerfil(false)}>Cancelar</button>
-                            </div>
-                        </form>
-                    </div>
-                )}
-
                 <div className="inventory-layout">
                     {/* Coluna do Inventário */}
                     <div className="inventory-column">
-                        <h2>🎒 Seu Inventário</h2>
-                        {user?.Artefatos?.length > 0 ? (
+                        <h2>🎒 Inventário de {profile.nome}</h2>
+                        {profile?.Artefatos?.length > 0 ? (
                             <div className="cards-grid">
-                                {user.Artefatos.map((item, index) => (
-                                    <div className="inventory-card" key={item.id || `item-${index}`} onClick={() => abrirDetalhes(item)} style={{ cursor: 'pointer' }}>
+                                {profile.Artefatos.map(item => (
+                                    <div className="inventory-card" key={item.id || item.nome} onClick={() => abrirDetalhes(item)} style={{ cursor: 'pointer' }}>
                                         <div className="inventory-header">
                                             <div className="inventory-icon">
                                                 {item.tipo === 'Arma' ? '⚔️' : item.tipo === 'Poção' ? '🧪' : item.tipo === 'Armadura' ? '🛡️' : item.tipo === 'Relíquia' ? '🔮' : '📦'}
@@ -311,11 +197,11 @@ export default function Home() {
 
                     {/* Coluna das Habilidades */}
                     <div className="inventory-column">
-                        <h2>✨ Suas Habilidades</h2>
-                        {user?.skills?.length > 0 ? (
+                        <h2>✨ Habilidades de {profile.nome}</h2>
+                        {profile?.skills?.length > 0 ? (
                             <div className="cards-grid">
-                                {user.skills.map((skill, index) => (
-                                    <div className="inventory-card" key={skill.id || `skill-${index}`} onClick={() => abrirDetalhesSkill(skill)} style={{ cursor: 'pointer' }}>
+                                {profile.skills.map(skill => (
+                                    <div className="inventory-card" key={skill.id} onClick={() => abrirDetalhesSkill(skill)} style={{ cursor: 'pointer' }}>
                                         <div className="inventory-header">
                                             <div className="inventory-icon" style={{ color: '#8257e5' }}>
                                                 {skill.tipo === 'Cura' ? '💖' : skill.tipo === 'Defesa' ? '🛡️' : skill.tipo === 'Ataque' ? '⚔️' : skill.tipo === 'Buff' ? '✨' : skill.tipo === 'Debuff' ? '💀' : '⚡'}
@@ -353,13 +239,13 @@ export default function Home() {
                             <div className="cards-grid">
                                 <div className="empty-card">
                                     <h3>Nenhuma Habilidade</h3>
-                                    <p style={{ fontSize: '0.9rem', color: '#7c7c8a', marginTop: '10px' }}>Visite o Grimório!</p>
+                                    <p style={{ fontSize: '0.9rem', color: '#7c7c8a', marginTop: '10px' }}>Este aventureiro ainda não aprendeu magias.</p>
                                 </div>
                             </div>
                         )}
                     </div>
                 </div>
             </div>
-        </div >
+        </div>
     );
 }

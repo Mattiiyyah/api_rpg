@@ -60,6 +60,11 @@ export default function Login() {
       <MagicMouse />
       <div className="grid-overlay"></div>
 
+      {/* Botão Voltar */}
+      <button className="btn-back-landing" onClick={() => navigate('/')}>
+        ← Voltar
+      </button>
+
       <div className="runes-container">
         <div className="rune text-rune" style={{ top: '15%', left: '10%', animationDelay: '0s' }}>+100 XP</div>
         <div className="rune text-rune" style={{ top: '60%', left: '5%', animationDelay: '2s' }}>Level Up!</div>
@@ -80,12 +85,12 @@ export default function Login() {
 
       <div className="login-welcome-tooltip">
         <span className="tooltip-icon">👋</span>
-        <span>Aventureiro, faça seu login abaixo!</span>
+        <span>Seja bem-vindo(a) ao SudoGestor, faça seu login!</span>
       </div>
 
       <div className="login-card">
         <div className="login-icon" style={iconStyle}>🔮</div>
-        <h1 className="login-title">Portal do Reino</h1>
+        <h1 className="login-title">SudoGestor</h1>
         <p className="login-subtitle">Entre com suas credenciais de mestre</p>
 
         <form onSubmit={lidaComLogin} className="login-form">
@@ -106,7 +111,7 @@ export default function Login() {
           />
 
           <button type="submit" className="button-login" disabled={isLoading}>
-            {isLoading ? 'Invocando...' : 'Acessar Grimório'}
+            {isLoading ? 'Autenticando...' : 'sudo login'}
           </button>
         </form>
       </div>

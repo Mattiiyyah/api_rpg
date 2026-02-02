@@ -1,0 +1,68 @@
+/* Footer Styles */
+.footer {
+    background: rgba(9, 9, 11, 0.98);
+    border-top: 1px solid var(--border);
+    padding: 1.2rem 1rem;
+    width: 100%;
+    flex-shrink: 0;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.footer-brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.footer-logo {
+    font-size: 1.1rem;
+}
+
+.footer-name {
+    font-family: 'Cinzel', serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #e1e1e6 0%, #8257e5 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.footer-tagline {
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    margin: 0;
+}
+
+.footer-divider {
+    width: 40px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--primary), transparent);
+    margin: 0.2rem 0;
+}
+
+.footer-copyright {
+    color: var(--text-tertiary);
+    font-size: 0.7rem;
+    margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .footer {
+        padding: 1rem;
+    }
+
+    .footer-tagline {
+        font-size: 0.7rem;
+    }
+}

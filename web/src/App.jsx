@@ -10,21 +10,28 @@ import Landing from './pages/Landing';
 import Guilda from './pages/Guilda';
 import Artefato from './pages/Artefato';
 import Skill from './pages/Skill';
+import User from './pages/User';
+import Footer from './components/Footer';
 
 function App() {
   return (
-    <>
-      <Routes>
-        <Route path="/" element={<Landing />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/dashboard" element={<Home />} />
-        <Route path="/guilda" element={<Guilda />} />
-        <Route path="/artefatos" element={<Artefato />} />
-        <Route path="/skills" element={<Skill />} />
-      </Routes>
+    <div className="app-layout">
+      <main className="app-content">
+        <Routes>
+          <Route path="/" element={<Landing />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/dashboard" element={<Home />} />
+          <Route path="/guilda" element={<Guilda />} />
+          <Route path="/artefatos" element={<Artefato />} />
+          <Route path="/skills" element={<Skill />} />
+          <Route path="/users/:id" element={<User />} />
+        </Routes>
+      </main>
+
+      <Footer />
 
       <ToastContainer autoClose={3000} theme="dark" />
-    </>
+    </div>
   );
 }
 

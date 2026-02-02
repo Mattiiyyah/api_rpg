@@ -20,26 +20,27 @@ export default function Landing() {
             </div>
 
             <div className="landing-content">
-                <h1 className="landing-title">Crônicas do Código Eterno</h1>
-                <p className="landing-subtitle">Onde lógica encontra magia.</p>
+                <h1 className="landing-title">SudoGestor</h1>
+                <p className="landing-subtitle">Gerencie sua campanha com poderes de root. 🎲</p>
 
                 <div className="story-card">
                     <div className="story-text">
                         <p>
-                            Em uma era onde <strong>dragões de espaguete</strong> aterrorizavam os servidores,
-                            surgiu uma antiga profecia. Dizia-se que um grupo de Aventureiros, guiados pela lógica e café,
-                            restauraria a ordem no <strong>Reino Digital</strong>.
+                            Chega de <strong>fichas rabiscadas</strong> perdidas em pilhas de papel.
+                            Chega de dados esquecidos e inventários desorganizados.
+                            O <strong>SudoGestor</strong> nasceu para trazer ordem ao caos das mesas de RPG.
                         </p>
                         <br />
                         <p>
-                            A <strong>Guilda dos Devs</strong> permanece como o último bastião de esperança.
-                            Seus arquivos guardam segredos de tecnologias esquecidas.
+                            Gerencie seus <strong>aventureiros</strong>, controle <strong>artefatos lendários</strong>,
+                            acompanhe <strong>habilidades</strong> e evolua suas campanhas como um verdadeiro
+                            <strong> Mestre de Dungeon</strong> — agora com superpoderes digitais.
                         </p>
                     </div>
                 </div>
 
                 <button onClick={() => navigate('/login')} className="btn-enter">
-                    Entrar no Portal
+                    sudo login --rpg
                 </button>
             </div>
         </div>

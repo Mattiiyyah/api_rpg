@@ -309,3 +309,112 @@
     transform: perspective(600px) rotateX(60deg) translateY(60px) translateZ(-200px);
   }
 }
+
+/* Botão Voltar para Landing */
+.btn-back-landing {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 100;
+  background: rgba(32, 32, 36, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-secondary);
+  padding: 10px 20px;
+  border-radius: 100px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Outfit', sans-serif;
+}
+
+.btn-back-landing:hover {
+  background: rgba(130, 87, 229, 0.2);
+  border-color: var(--primary);
+  color: var(--text-primary);
+  transform: translateX(-5px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .login-container {
+    padding: 15px;
+  }
+
+  .login-card {
+    padding: 2rem 1.5rem;
+    max-width: 100%;
+  }
+
+  .login-card:hover {
+    transform: none;
+  }
+
+  .login-title {
+    font-size: 1.6rem;
+  }
+
+  .login-subtitle {
+    font-size: 0.9rem;
+    margin-bottom: 2rem;
+  }
+
+  .login-icon {
+    font-size: 2.5rem;
+  }
+
+  .input-field {
+    padding: 14px 16px;
+    font-size: 1rem;
+  }
+
+  .button-login {
+    padding: 14px;
+    font-size: 1rem;
+    letter-spacing: 1px;
+  }
+
+  .login-welcome-tooltip {
+    font-size: 1rem;
+  }
+}
+
+/* Mobile pequeno */
+@media (max-width: 480px) {
+  .login-card {
+    padding: 1.5rem 1rem;
+    margin: 10px;
+  }
+
+  .login-title {
+    font-size: 1.4rem;
+  }
+
+  .login-subtitle {
+    font-size: 0.85rem;
+  }
+
+  .login-icon {
+    font-size: 2rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .input-field {
+    padding: 12px 14px;
+  }
+
+  .button-login {
+    padding: 12px;
+    font-size: 0.9rem;
+  }
+
+  .rune {
+    display: none;
+  }
+
+  .grid-overlay {
+    opacity: 0.1;
+  }
+}

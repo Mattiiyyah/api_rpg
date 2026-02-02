@@ -47,7 +47,7 @@ export default function Skill() {
 
     useEffect(() => {
         if (!user) {
-            navigate('/home');
+            navigate('/login');
             return;
         }
     }, [user, navigate]);
@@ -458,17 +458,17 @@ export default function Skill() {
                                 <div className="member-actions" onClick={(e) => e.stopPropagation()}>
                                     {isKing && (
                                         <>
-                                            <button className="btn-action edit" onClick={() => lidandoComEditar(skill.id, skill.nome, skill.tipo, skill.dano, skill.custo_mana, skill.descricao)}>✏️</button>
-                                            <button className="btn-action delete" onClick={() => abrirModalDelete(skill)}>🗑️</button>
+                                            <button className="btn-action edit" title="Editar" onClick={() => lidandoComEditar(skill.id, skill.nome, skill.tipo, skill.dano, skill.custo_mana, skill.descricao)}>✏️</button>
+                                            <button className="btn-action delete" title="Excluir" onClick={() => abrirModalDelete(skill)}>🗑️</button>
                                         </>
                                     )}
 
                                     {jaAprendi ? (
-                                        <button className="btn-action learn" disabled>
+                                        <button className="btn-action learn" title="Já aprendida" disabled>
                                             🧐
                                         </button>
                                     ) : (
-                                        <button className="btn-action learn" onClick={() => abrirModalLearn(skill)}>
+                                        <button className="btn-action learn" title="Aprender" onClick={() => abrirModalLearn(skill)}>
                                             🧠
                                         </button>
                                     )}

@@ -141,3 +141,61 @@
         transform: translateY(0) scale(1);
     }
 }
+
+/* Responsive */
+@media (max-width: 768px) {
+    .modal-container {
+        max-width: calc(100% - 20px);
+        margin: 10px;
+    }
+
+    .modal-header {
+        padding: 18px;
+    }
+
+    .modal-header h3 {
+        font-size: 1.2rem;
+    }
+
+    .modal-content {
+        padding: 20px 18px;
+        font-size: 0.95rem;
+    }
+
+    .modal-actions {
+        padding: 18px;
+        flex-direction: column-reverse;
+        gap: 10px;
+    }
+
+    .btn-cancel-modal,
+    .btn-confirm-modal {
+        width: 100%;
+        padding: 12px;
+        text-align: center;
+    }
+}
+
+/* Mobile pequeno */
+@media (max-width: 480px) {
+    .modal-header {
+        padding: 15px;
+    }
+
+    .modal-header h3 {
+        font-size: 1.1rem;
+    }
+
+    .modal-content {
+        padding: 15px;
+        font-size: 0.9rem;
+    }
+
+    .modal-actions {
+        padding: 15px;
+    }
+
+    .btn-close {
+        font-size: 1.2rem;
+    }
+}

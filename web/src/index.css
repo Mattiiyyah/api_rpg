@@ -83,3 +83,14 @@ h6 {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--border);
 }
+
+/* App Layout - Footer sempre no final */
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-content {
+  flex: 1;
+}

@@ -42,7 +42,7 @@ export default function Artefato() {
 
     useEffect(() => {
         if (!user) {
-            navigate('/home');
+            navigate('/login');
             return;
         }
     }, [user, navigate]);
@@ -425,13 +425,14 @@ export default function Artefato() {
                             <div className="member-actions" onClick={(e) => e.stopPropagation()}>
                                 {isKing && (
                                     <>
-                                        <button className="btn-action edit" onClick={() => lidandoComEditar(item.id, item.nome, item.tipo, item.poder, item.lore)}>✏️</button>
-                                        <button className="btn-action delete" onClick={() => abrirModalDelete(item)}>🗑️</button>
+                                        <button className="btn-action edit" title="Editar" onClick={() => lidandoComEditar(item.id, item.nome, item.tipo, item.poder, item.lore)}>✏️</button>
+                                        <button className="btn-action delete" title="Excluir" onClick={() => abrirModalDelete(item)}>🗑️</button>
                                     </>
                                 )}
                                 {item.User ? (
                                     <button
                                         className="btn-action"
+                                        title={`Pertence a ${item.User.nome}`}
                                         style={{ cursor: 'not-allowed', opacity: 0.6 }}
                                         onClick={() => toast.error(`Este item já pertence ao aventureiro ${item.User.nome}.`)}
                                     >
@@ -440,6 +441,7 @@ export default function Artefato() {
                                 ) : (
                                     <button
                                         className="btn-action loot"
+                                        title="Coletar"
                                         onClick={() => abrirModalLoot(item)}
                                     >
                                         🖐️

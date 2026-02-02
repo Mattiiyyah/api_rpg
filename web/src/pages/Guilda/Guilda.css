@@ -154,21 +154,75 @@
     border-color: var(--danger);
 }
 
+.btn-action.view {
+    color: var(--text-secondary);
+}
+
+.btn-action.view:hover {
+    color: #38bdf8;
+    border-color: #38bdf8;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .members-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
     .member-card {
         flex-direction: column;
         text-align: center;
-        padding: 2rem;
+        padding: 1.5rem;
+    }
+
+    .member-info {
+        align-items: center;
     }
 
     .member-actions {
         flex-direction: row;
         margin-top: 1rem;
+        justify-content: center;
     }
 
     .member-card::before {
         width: 100%;
         height: 3px;
+    }
+
+    .btn-action {
+        width: 44px;
+        height: 44px;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .form-actions button {
+        width: 100%;
+    }
+}
+
+/* Mobile pequeno */
+@media (max-width: 480px) {
+    .member-avatar {
+        width: 60px;
+        height: 60px;
+        font-size: 1.8rem;
+    }
+
+    .member-info strong {
+        font-size: 1rem;
+    }
+
+    .member-email {
+        font-size: 0.8rem;
+        word-break: break-all;
     }
 }

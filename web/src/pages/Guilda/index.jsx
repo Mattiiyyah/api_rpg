@@ -34,7 +34,7 @@ export default function Guilda() {
 
     useEffect(() => {
         if (!user) {
-            navigate('/home');
+            navigate('/login');
             return;
         }
         if (!isAdmin) {
@@ -266,8 +266,9 @@ export default function Guilda() {
                                 <span className="member-email">{member.email}</span>
                             </div>
                             <div className="member-actions">
-                                <button className="btn-action edit" onClick={() => lidandoComEditar(member.id, member.nome, member.email, member.role)}>✏️</button>
-                                <button className="btn-action delete" onClick={() => abrirModalDelete(member)}>🗑️</button>
+                                <button className="btn-action edit" title="Editar" onClick={() => lidandoComEditar(member.id, member.nome, member.email, member.role)}>✏️</button>
+                                <button className="btn-action delete" title="Excluir" onClick={() => abrirModalDelete(member)}>🗑️</button>
+                                <button className="btn-action view" title="Ver Perfil" onClick={() => navigate(`/users/${member.id}`)}>👁️</button>
                             </div>
                         </div>
                     ))}

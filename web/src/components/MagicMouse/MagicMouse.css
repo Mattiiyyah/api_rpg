@@ -9,3 +9,16 @@
     z-index: 9999;
     /* On top of everything */
 }
+
+/* Esconder em dispositivos touch (celular/tablet) */
+@media (pointer: coarse) {
+    .magic-mouse-canvas {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .magic-mouse-canvas {
+        display: none;
+    }
+}
