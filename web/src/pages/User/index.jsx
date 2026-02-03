@@ -12,6 +12,7 @@ export default function User() {
     const { id } = useParams();
 
     const [profile, setProfile] = useState(null);
+    const [novoNivel, setnovoNivel] = useState('');
 
     const [user] = useState(() => {
         const localUser = localStorage.getItem('user');
@@ -19,6 +20,8 @@ export default function User() {
     });
 
     const isAdmin = user?.role === 'KING' || user?.role === 'MASTER';
+
+    const isKing = user?.role === 'KING';
 
     // Inventory Details State
     const [showDetails, setShowDetails] = useState(false);
@@ -58,6 +61,36 @@ export default function User() {
         loadUser();
     }, [isAdmin, id]);
 
+    async function salvarNivel() {
+        const token = localStorage.getItem('token');
+        if (!token) return;
+        const headers = { Authorization: `Bearer ${token}` };
+
+        try {
+            const response = await axios.patch(`/users/${id}/skills/${selectedSkill.id}`,
+                { nivel: novoNivel }, { headers });
+
+            toast.success(response.data.msg);
+
+            // Atualiza o profile com o novo nível
+            const novasSkills = profile.skills.map(skill => {
+                if (skill.id === selectedSkill.id) {
+                    return { ...skill, UserSkill: { ...skill.UserSkill, nivel: novoNivel } };
+                }
+                return skill;
+            });
+            setProfile({ ...profile, skills: novasSkills });
+
+            // Fecha o modal após sucesso
+            setShowSkillDetails(false);
+
+        } catch (err) {
+            const errors = err.response?.data?.errors || [];
+            if (errors.length > 0) errors.map(error => toast.error(error));
+            else toast.error('Erro ao evoluir habilidade.');
+        }
+    }
+
     function abrirDetalhes(item) {
         setSelectedItem(item);
         setShowDetails(true);
@@ -65,6 +98,7 @@ export default function User() {
 
     function abrirDetalhesSkill(skill) {
         setSelectedSkill(skill);
+        setnovoNivel(skill.UserSkill?.nivel || 1);
         setShowSkillDetails(true);
     }
 
@@ -138,6 +172,113 @@ export default function User() {
                                 {selectedSkill.descricao || "Uma magia misteriosa..."}
                             </p>
                         </div>
+
+                        {isKing && (
+                            <div style={{
+                                marginTop: '20px',
+                                borderTop: '1px solid #323238',
+                                paddingTop: '20px',
+                                background: 'linear-gradient(135deg, rgba(130, 87, 229, 0.1) 0%, rgba(104, 51, 228, 0.05) 100%)',
+                                borderRadius: '12px',
+                                padding: '20px',
+                                border: '1px solid rgba(130, 87, 229, 0.3)'
+                            }}>
+                                <h4 style={{
+                                    marginBottom: '15px',
+                                    color: '#e1e1e6',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '8px',
+                                    fontSize: '1rem'
+                                }}>
+                                    ⚡ Alterar Nível Arcano
+                                </h4>
+
+                                <div style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '15px',
+                                    flexWrap: 'wrap'
+                                }}>
+                                    <div style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '10px',
+                                        background: 'rgba(32, 32, 36, 0.8)',
+                                        padding: '8px 16px',
+                                        borderRadius: '12px',
+                                        border: '1px solid #323238'
+                                    }}>
+                                        <button
+                                            onClick={() => setnovoNivel(prev => Math.max(1, prev - 1))}
+                                            style={{
+                                                width: '32px',
+                                                height: '32px',
+                                                borderRadius: '8px',
+                                                background: 'linear-gradient(135deg, #323238 0%, #202024 100%)',
+                                                border: '1px solid #424249',
+                                                color: '#e1e1e6',
+                                                fontSize: '1.2rem',
+                                                cursor: 'pointer',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                transition: 'all 0.2s'
+                                            }}
+                                        >−</button>
+
+                                        <span style={{
+                                            fontSize: '1.5rem',
+                                            fontWeight: 'bold',
+                                            color: '#8257e5',
+                                            minWidth: '40px',
+                                            textAlign: 'center'
+                                        }}>
+                                            {novoNivel}
+                                        </span>
+
+                                        <button
+                                            onClick={() => setnovoNivel(prev => prev + 1)}
+                                            style={{
+                                                width: '32px',
+                                                height: '32px',
+                                                borderRadius: '8px',
+                                                background: 'linear-gradient(135deg, #323238 0%, #202024 100%)',
+                                                border: '1px solid #424249',
+                                                color: '#e1e1e6',
+                                                fontSize: '1.2rem',
+                                                cursor: 'pointer',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                transition: 'all 0.2s'
+                                            }}
+                                        >+</button>
+                                    </div>
+
+                                    <button
+                                        onClick={salvarNivel}
+                                        style={{
+                                            padding: '10px 20px',
+                                            borderRadius: '10px',
+                                            background: 'linear-gradient(135deg, #8257e5 0%, #6833e4 100%)',
+                                            border: 'none',
+                                            color: '#fff',
+                                            fontWeight: 'bold',
+                                            fontSize: '0.9rem',
+                                            cursor: 'pointer',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '8px',
+                                            boxShadow: '0 4px 12px rgba(130, 87, 229, 0.3)',
+                                            transition: 'all 0.2s'
+                                        }}
+                                    >
+                                        ✨ Confirmar Poder
+                                    </button>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 )}
             </Modal>
@@ -148,7 +289,9 @@ export default function User() {
 
                 <div className="user-info">
                     <div className="user-details">
-                        <span className="user-name">{profile.nome}</span>
+                        <span className="user-name">
+                            {profile.role === 'KING' ? '🤴' : profile.role === 'MASTER' ? '🧙' : '🧝'} {profile.nome}
+                        </span>
                         <span className={`role-badge role-${profile.role.toLowerCase()}`}>{profile.role}</span>
                     </div>
                     <button className="btn-logout" onClick={() => navigate(-1)}>← Voltar</button>

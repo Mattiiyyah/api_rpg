@@ -241,7 +241,9 @@ export default function Home() {
 
                 <div className="user-info">
                     <div className="user-details">
-                        <span className="user-name">{user.nome}</span>
+                        <span className="user-name">
+                            {user.role === 'KING' ? '🤴' : user.role === 'MASTER' ? '🧙' : '🧝'} {user.nome}
+                        </span>
                         <span className={`role-badge role-${user.role.toLowerCase()}`}>{user.role}</span>
                     </div>
 

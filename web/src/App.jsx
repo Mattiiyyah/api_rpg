@@ -30,7 +30,7 @@ function App() {
 
       <Footer />
 
-      <ToastContainer autoClose={3000} theme="dark" />
+      <ToastContainer autoClose={3000} theme="dark" style={{ zIndex: 99999 }} />
     </div>
   );
 }

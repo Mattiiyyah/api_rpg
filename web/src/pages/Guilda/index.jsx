@@ -258,7 +258,9 @@ export default function Guilda() {
                 <div className="members-grid">
                     {membrosGuilda.map(member => (
                         <div key={member.id} className="member-card">
-                            <div className="member-avatar">{member.nome.charAt(0).toUpperCase()}</div>
+                            <div className="member-avatar">
+                                {member.role === 'KING' ? '🤴' : member.role === 'MASTER' ? '🧙' : '🧝'}
+                            </div>
                             <div className="member-info">
                                 <small>ID: {member.id}</small>
                                 <strong>{member.nome}</strong>

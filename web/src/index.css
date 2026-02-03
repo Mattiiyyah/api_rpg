@@ -94,3 +94,8 @@ h6 {
 .app-content {
   flex: 1;
 }
+
+/* Toast sempre na frente do modal */
+.Toastify__toast-container {
+  z-index: 99999 !important;
+}

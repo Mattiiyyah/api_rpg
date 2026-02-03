@@ -316,7 +316,7 @@ class UserController {
       });
 
       return res.json({
-        msg: `O nivel da habilidade do aventureiro ${userId.nome} foi atualizado para ${updatedUserSkill.nivel}.`,
+        msg: `O nivel da habilidade do ${userId.role}, ${userId.nome} foi atualizado para ${updatedUserSkill.nivel}.`,
         dados: updatedUserSkill
       });
 
