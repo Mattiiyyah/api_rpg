@@ -44,6 +44,28 @@
     z-index: 2;
 }
 
+.landing-logo {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 1.5rem;
+    animation: logoPulse 3s ease-in-out infinite alternate;
+    filter: drop-shadow(0 0 15px rgba(130, 87, 229, 0.5));
+}
+
+@keyframes logoPulse {
+    from {
+        transform: scale(1);
+        filter: drop-shadow(0 0 10px rgba(130, 87, 229, 0.4));
+    }
+
+    to {
+        transform: scale(1.05);
+        filter: drop-shadow(0 0 25px rgba(130, 87, 229, 0.7));
+    }
+}
+
 .landing-subtitle {
     font-size: 1.5rem;
     color: #a1a1aa;

@@ -20,6 +20,7 @@ export default function Landing() {
             </div>
 
             <div className="landing-content">
+                <img src="/logo.png" alt="SudoGestor Logo" className="landing-logo" />
                 <h1 className="landing-title">SudoGestor</h1>
                 <p className="landing-subtitle">Gerencie sua campanha com poderes de root. 🎲</p>
 
