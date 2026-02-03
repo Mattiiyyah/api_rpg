@@ -301,7 +301,10 @@ export default function Skill() {
 
 
             <div className="home-header">
-                <h1>✨ Grimório de Habilidades</h1>
+                <div className="header-brand" onClick={() => navigate('/dashboard')} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <img src="/logo.png" alt="SudoGestor" style={{ width: '45px', height: '45px', borderRadius: '50%' }} />
+                    <h1>✨ Grimório de Habilidades</h1>
+                </div>
                 <button onClick={() => navigate('/dashboard')} className="btn-logout" style={{ borderColor: '#fff', color: '#fff' }}>
                     ⬅ Voltar para Dashboard
                 </button>

@@ -203,7 +203,10 @@ export default function Guilda() {
             </Modal>
 
             <div className="home-header">
-                <h1>🏰 Gestão da Guilda</h1>
+                <div className="header-brand" onClick={() => navigate('/dashboard')} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <img src="/logo.png" alt="SudoGestor" style={{ width: '45px', height: '45px', borderRadius: '50%' }} />
+                    <h1>🏰 Gestão da Guilda</h1>
+                </div>
                 <button onClick={() => navigate('/dashboard')} className="btn-logout" style={{ borderColor: '#fff', color: '#fff' }}>
                     ⬅ Voltar para Home
                 </button>
@@ -219,20 +222,20 @@ export default function Guilda() {
                             <input type="text" placeholder="Nome do aventureiro" className="input-dark" value={novoNome} onChange={e => setNovoNome(e.target.value)} />
                         </div>
 
-                    {!editingMe && (
-                        <>
-                        <div className="input-group">
-                            <label className="form-label">E-mail</label>
-                            <input type="email" placeholder="email@exemplo.com" className="input-dark" value={novoEmail} onChange={e => setNovoEmail(e.target.value)} />
-                        </div>
-                    
+                        {!editingMe && (
+                            <>
+                                <div className="input-group">
+                                    <label className="form-label">E-mail</label>
+                                    <input type="email" placeholder="email@exemplo.com" className="input-dark" value={novoEmail} onChange={e => setNovoEmail(e.target.value)} />
+                                </div>
 
-                        <div className="input-group">
-                            <label className="form-label">Nova Senha</label>
-                            <input type="password" placeholder={idEditar ? "Deixe vazio para manter" : "Senha secreta"} className="input-dark" value={novaSenha} onChange={e => setNovaSenha(e.target.value)} />
-                        </div>
-                        </>
-                    )}
+
+                                <div className="input-group">
+                                    <label className="form-label">Nova Senha</label>
+                                    <input type="password" placeholder={idEditar ? "Deixe vazio para manter" : "Senha secreta"} className="input-dark" value={novaSenha} onChange={e => setNovaSenha(e.target.value)} />
+                                </div>
+                            </>
+                        )}
 
                         <div className="input-group">
                             <label className="form-label">Cargo</label>
@@ -274,7 +277,7 @@ export default function Guilda() {
                                 <span className={`role-badge role-${member.role.toLowerCase()}`}>{member.role}</span>
                                 <span className="member-email">{member.email}</span>
                             </div>
-                            <div className="member-actions"> 
+                            <div className="member-actions">
                                 <button className="btn-action edit" title="Editar" onClick={() => lidandoComEditar(member.id, member.nome, member.email, member.role)}>✏️</button>
                                 <button className="btn-action delete" title="Excluir" onClick={() => abrirModalDelete(member)}>🗑️</button>
                                 <button className="btn-action view" title="Ver Perfil" onClick={() => navigate(`/users/${member.id}`)}>👁️</button>

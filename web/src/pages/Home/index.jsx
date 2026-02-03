@@ -187,7 +187,10 @@ export default function Home() {
             </Modal>
 
             <div className="home-header">
-                <h1>SudoGestor 🎲</h1>
+                <div className="header-brand" onClick={() => navigate('/dashboard')} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <img src="/logo.png" alt="SudoGestor" style={{ width: '45px', height: '45px', borderRadius: '50%' }} />
+                    <h1>SudoGestor 🎲</h1>
+                </div>
 
                 <div className="header-actions">
                     {isAdmin && (

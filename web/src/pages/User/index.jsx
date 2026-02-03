@@ -285,7 +285,10 @@ export default function User() {
 
             {/* Header com info do perfil */}
             <div className="home-header">
-                <h1>📜 Perfil do Aventureiro</h1>
+                <div className="header-brand" onClick={() => navigate('/dashboard')} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <img src="/logo.png" alt="SudoGestor" style={{ width: '45px', height: '45px', borderRadius: '50%' }} />
+                    <h1>📜 Perfil do Aventureiro</h1>
+                </div>
 
                 <div className="user-info">
                     <div className="user-details">

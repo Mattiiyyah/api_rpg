@@ -244,6 +244,12 @@ class UserController {
       const targetIsMaster = user.role === 'MASTER';
       const isSelf = Number(req.params.id) === userId;
 
+      if((isKing && targetIsKing) && !isSelf) {
+        return res.status(401).json({
+          errors: ['O Rei não pode alterar os registros de outro Rei.']
+        });
+      }
+
       if (targetIsKing && !isSelf) {
         return res.status(401).json({
           errors: ['A Coroa é intocável! Meros mortais não podem alterar os registros do Rei.']
