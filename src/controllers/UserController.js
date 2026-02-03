@@ -2,8 +2,102 @@ import User from '../models/User.js';
 import Artefato from '../models/Artefato.js';
 import Skill from '../models/Skill.js';
 import UserSkill from '../models/UserSkill.js';
+import crypto from 'crypto';
+import transporter from '../config/mail.js';
 
 class UserController {
+
+  //registerKing
+  async registerKing(req, res) {
+    try {
+      // Gera código de 6 dígitos
+      const verificationCode = crypto.randomInt(100000, 999999).toString();
+
+      const { nome, email, password } = req.body;
+
+      if (!nome || !email || !password) {
+        return res.status(401).json({
+          errors: ['Todos os campos são obrigatórios.'],
+        });
+      }
+
+      const user = await User.create({
+        nome,
+        email,
+        password,
+        role: 'KING',
+        verification_code: verificationCode,
+      });
+
+      await transporter.sendMail({
+        from: process.env.MAIL_FROM,
+        to: user.email,
+        subject: 'Sua Aventura Começa! ⚔️ - Código de Verificação',
+        text: `Olá Rei! Seu código de verificação é: ${verificationCode}`,
+        html: `
+          <div style="font-family: Arial, sans-serif; color: #333;">
+            <h2>Bem-vindo ao SudoGestor! 🐧👑</h2>
+            <p>Para assumir seu trono, insira o código abaixo no sistema:</p>
+            <h1 style="color: #8257e5; letter-spacing: 5px;">${verificationCode}</h1>
+            <p>Se você não criou esta conta, ignore este e-mail.</p>
+          </div>
+        `,
+      });
+
+      return res.json({
+        message: 'Rei cadastrado com sucesso! Verifique seu e-mail.',
+        email: user.email
+      });
+
+    } catch (e) {
+      console.log(e);
+      return res.status(400).json({
+        errors: e.errors ? e.errors.map((err) => err.message) : ['Erro ao criar usuário'],
+      });
+    }
+  }
+
+  //verifyKing
+  async verifyKing(req, res) {
+    try {
+      const { email, verification_code } = req.body;
+
+      if (!email || !verification_code) {
+        return res.status(401).json({
+          errors: ['Email e código de verificação são obrigatórios.'],
+        });
+      }
+
+      const user = await User.findOne({ where: { email } });
+
+      if (!user) {
+        return res.status(404).json({
+          errors: ['Usuário não encontrado.'],
+        });
+      }
+
+      if (user.verification_code !== verification_code) {
+        return res.status(401).json({
+          errors: ['Código de verificação inválido.'],
+        });
+      }
+
+      user.verification_code = null;
+      await user.save();
+
+      return res.json({
+        message: 'Rei verificado com sucesso!',
+        user: { id: user.id, nome: user.nome, email: user.email, role: user.role },
+      });
+
+    } catch (e) {
+      console.log(e);
+      return res.status(400).json({
+        errors: e.errors ? e.errors.map((err) => err.message) : ['Erro ao verificar usuário'],
+      });
+    }
+  }
+
   //store
   async store(req, res) {
 
@@ -162,9 +256,9 @@ class UserController {
         });
       }
 
-      if (!isMaster && !isKing && !isSelf) {
+      if (!isMaster && !isKing) {
         return res.status(401).json({
-          errors: ['Você não tem autoridade para mexer na ficha de outro aventureiro.']
+          errors: ['Aventureiros não possuem autoridade para alterar registros. Procure um Mestre.']
         });
       }
 
@@ -241,15 +335,17 @@ class UserController {
         });
       }
 
-      if (!isMaster && !isKing && !isSelf) {
+      if (!isMaster && !isKing) {
         return res.status(401).json({
-          errors: ['Seu nível de poder é insuficiente para exilar alguém do reino.']
+          errors: ['Aventureiros não têm poder para exilar almas do reino. Procure um Mestre.']
         });
       }
 
-      if (isMaster && targetIsMaster && !isSelf) {
+      if (isMaster && targetIsMaster) {
         return res.status(401).json({
-          errors: ['Sua autoridade não funciona contra um igual (Outro Mestre).']
+          errors: [isSelf
+            ? 'Você não pode apagar a si mesmo, somente o Rei pode fazer isso.'
+            : 'Sua autoridade não funciona contra um igual (Outro Mestre).']
         });
       }
 

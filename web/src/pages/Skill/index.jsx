@@ -414,69 +414,98 @@ export default function Skill() {
                 </div>
 
 
-                <div className="members-grid">
-                    {skills.map((skill) => {
-                        const jaAprendi = learnedSkillIds.includes(skill.id);
+                {skills.length > 0 ? (
+                    <div className="members-grid">
+                        {skills.map((skill) => {
+                            const jaAprendi = learnedSkillIds.includes(skill.id);
 
-                        return (
-                            <div key={skill.id} className="member-card" onClick={() => abrirDetalhes(skill)} style={{ cursor: 'pointer' }}>
-
-
-                                <div className="member-avatar" style={{ color: '#8257e5', borderColor: '#8257e5' }}>
-                                    {skill.tipo === 'Cura' ? '💖' : skill.tipo === 'Defesa' ? '🛡️' : skill.tipo === 'Ataque' ? '⚔️' : skill.tipo === 'Buff' ? '✨' : skill.tipo === 'Debuff' ? '💀' : '⚡'}
-                                </div>
+                            return (
+                                <div key={skill.id} className="member-card" onClick={() => abrirDetalhes(skill)} style={{ cursor: 'pointer' }}>
 
 
-                                <div className="member-info">
-                                    <small>ID: {skill.id}</small>
+                                    <div className="member-avatar" style={{ color: '#8257e5', borderColor: '#8257e5' }}>
+                                        {skill.tipo === 'Cura' ? '💖' : skill.tipo === 'Defesa' ? '🛡️' : skill.tipo === 'Ataque' ? '⚔️' : skill.tipo === 'Buff' ? '✨' : skill.tipo === 'Debuff' ? '💀' : '⚡'}
+                                    </div>
 
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                        <strong>{skill.nome}</strong>
-                                        {skill.tipo && (
-                                            <span className="role-badge" style={{ backgroundColor: '#202024', border: '1px solid #323238', fontSize: '0.7rem' }}>
-                                                {skill.tipo}
+
+                                    <div className="member-info">
+                                        <small>ID: {skill.id}</small>
+
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                            <strong>{skill.nome}</strong>
+                                            {skill.tipo && (
+                                                <span className="role-badge" style={{ backgroundColor: '#202024', border: '1px solid #323238', fontSize: '0.7rem' }}>
+                                                    {skill.tipo}
+                                                </span>
+                                            )}
+                                        </div>
+
+
+                                        <div style={{ display: 'flex', gap: '15px', marginTop: '8px', fontSize: '0.9rem' }}>
+                                            <span style={{ color: '#ff4d4d', fontWeight: 'bold' }}>
+                                                ⚔️ {skill.dano}
                                             </span>
+                                            <span style={{ color: '#04d361', fontWeight: 'bold' }}>
+                                                💧 {skill.custo_mana !== undefined ? skill.custo_mana : skill.custo}
+                                            </span>
+                                        </div>
+
+                                        <p style={{ fontSize: '0.8rem', color: '#7c7c8a', marginTop: '8px', fontStyle: 'italic', lineHeight: '1.4' }}>
+                                            "{skill.descricao ? (skill.descricao.length > 50 ? skill.descricao.substring(0, 50) + '...' : skill.descricao) : "Uma magia misteriosa..."}"
+                                        </p>
+                                    </div>
+
+
+                                    <div className="member-actions" onClick={(e) => e.stopPropagation()}>
+                                        {isKing && (
+                                            <>
+                                                <button className="btn-action edit" title="Editar" onClick={() => lidandoComEditar(skill.id, skill.nome, skill.tipo, skill.dano, skill.custo_mana, skill.descricao)}>✏️</button>
+                                                <button className="btn-action delete" title="Excluir" onClick={() => abrirModalDelete(skill)}>🗑️</button>
+                                            </>
+                                        )}
+
+                                        {jaAprendi ? (
+                                            <button className="btn-action learn" title="Já aprendida" disabled>
+                                                🧐
+                                            </button>
+                                        ) : (
+                                            <button className="btn-action learn" title="Aprender" onClick={() => abrirModalLearn(skill)}>
+                                                🧠
+                                            </button>
                                         )}
                                     </div>
-
-
-                                    <div style={{ display: 'flex', gap: '15px', marginTop: '8px', fontSize: '0.9rem' }}>
-                                        <span style={{ color: '#ff4d4d', fontWeight: 'bold' }}>
-                                            ⚔️ {skill.dano}
-                                        </span>
-                                        <span style={{ color: '#04d361', fontWeight: 'bold' }}>
-                                            💧 {skill.custo_mana !== undefined ? skill.custo_mana : skill.custo}
-                                        </span>
-                                    </div>
-
-                                    <p style={{ fontSize: '0.8rem', color: '#7c7c8a', marginTop: '8px', fontStyle: 'italic', lineHeight: '1.4' }}>
-                                        "{skill.descricao ? (skill.descricao.length > 50 ? skill.descricao.substring(0, 50) + '...' : skill.descricao) : "Uma magia misteriosa..."}"
+                                </div>
+                            );
+                        })}
+                    </div>
+                ) : (
+                    <div className="cards-grid">
+                        <div className="empty-card" style={{
+                            textAlign: 'center',
+                            padding: '40px 20px',
+                            background: 'rgba(32, 32, 36, 0.6)',
+                            borderRadius: '12px',
+                            border: '1px dashed #8257e5'
+                        }}>
+                            <span style={{ fontSize: '3rem', display: 'block', marginBottom: '15px' }}>📖</span>
+                            {isAdmin ? (
+                                <>
+                                    <h3 style={{ color: '#e1e1e6', marginBottom: '10px' }}>Nenhuma habilidade encontrada</h3>
+                                    <p style={{ color: '#7c7c8a', fontSize: '0.95rem' }}>
+                                        O grimório está em branco... Cadastre uma nova skill para começar!
                                     </p>
-                                </div>
-
-
-                                <div className="member-actions" onClick={(e) => e.stopPropagation()}>
-                                    {isKing && (
-                                        <>
-                                            <button className="btn-action edit" title="Editar" onClick={() => lidandoComEditar(skill.id, skill.nome, skill.tipo, skill.dano, skill.custo_mana, skill.descricao)}>✏️</button>
-                                            <button className="btn-action delete" title="Excluir" onClick={() => abrirModalDelete(skill)}>🗑️</button>
-                                        </>
-                                    )}
-
-                                    {jaAprendi ? (
-                                        <button className="btn-action learn" title="Já aprendida" disabled>
-                                            🧐
-                                        </button>
-                                    ) : (
-                                        <button className="btn-action learn" title="Aprender" onClick={() => abrirModalLearn(skill)}>
-                                            🧠
-                                        </button>
-                                    )}
-                                </div>
-                            </div>
-                        );
-                    })}
-                </div>
+                                </>
+                            ) : (
+                                <>
+                                    <h3 style={{ color: '#e1e1e6', marginBottom: '10px' }}>Aguardando novos feitiços</h3>
+                                    <p style={{ color: '#7c7c8a', fontSize: '0.95rem' }}>
+                                        Nenhuma habilidade disponível no momento. Aguarde o Mestre ensinar novas magias!
+                                    </p>
+                                </>
+                            )}
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );

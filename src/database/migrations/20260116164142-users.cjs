@@ -18,14 +18,18 @@ module.exports = {
           allowNull: false,
           unique: true,
         },
+        password_hash: {
+          type: Sequelize.STRING,
+          allowNull: false,
+        },
         role: {
           type: Sequelize.STRING, 
           allowNull: false,
           defaultValue: 'ADVENTURER',
         },
-        password_hash: {
+        verification_code: {
           type: Sequelize.STRING,
-          allowNull: false,
+          allowNull: true,
         },
         created_at: {
           type: Sequelize.DATE,

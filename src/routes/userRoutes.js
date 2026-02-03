@@ -4,6 +4,8 @@ import loginRequired from '../middlewares/loginRequired.js';
 
 const router = new Router();
 
+router.post('/register', userController.registerKing);
+router.post('/verify', userController.verifyKing);
 
 router.get('/', userController.index); // visualizar todos os usuários
 router.post('/', loginRequired, userController.store); //criar novo usuário

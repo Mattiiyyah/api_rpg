@@ -400,57 +400,86 @@ export default function Artefato() {
 
 
 
-                <div className="members-grid">
-                    {artefatos.map(item => (
-                        <div key={item.id} className="member-card" onClick={() => abrirDetalhes(item)} style={{ cursor: 'pointer' }}>
-                            <div className="member-avatar" style={{ color: '#fba94c', borderColor: '#fba94c' }}>
-                                {item.tipo === 'Arma' ? '⚔️' : item.tipo === 'Poção' ? '🧪' : item.tipo === 'Armadura' ? '🛡️' : item.tipo === 'Relíquia' ? '🔮' : '📦'}
-                            </div>
-
-                            <div className="member-info">
-                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                    <strong>{item.nome}</strong>
-                                    <small style={{ color: '#04d361' }}>⚡ {item.poder}</small>
+                {artefatos.length > 0 ? (
+                    <div className="members-grid">
+                        {artefatos.map(item => (
+                            <div key={item.id} className="member-card" onClick={() => abrirDetalhes(item)} style={{ cursor: 'pointer' }}>
+                                <div className="member-avatar" style={{ color: '#fba94c', borderColor: '#fba94c' }}>
+                                    {item.tipo === 'Arma' ? '⚔️' : item.tipo === 'Poção' ? '🧪' : item.tipo === 'Armadura' ? '🛡️' : item.tipo === 'Relíquia' ? '🔮' : '📦'}
                                 </div>
 
-                                <span className="role-badge" style={{ backgroundColor: '#323238', color: '#ccc', width: 'fit-content' }}>
-                                    {item.tipo}
-                                </span>
+                                <div className="member-info">
+                                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                        <strong>{item.nome}</strong>
+                                        <small style={{ color: '#04d361' }}>⚡ {item.poder}</small>
+                                    </div>
 
-                                <p style={{ fontSize: '0.8rem', color: '#7c7c8a', marginTop: '5px', fontStyle: 'italic' }}>
-                                    "{item.lore ? item.lore.substring(0, 50) + '...' : 'Sem história.'}"
-                                </p>
-                            </div>
+                                    <span className="role-badge" style={{ backgroundColor: '#323238', color: '#ccc', width: 'fit-content' }}>
+                                        {item.tipo}
+                                    </span>
 
-                            <div className="member-actions" onClick={(e) => e.stopPropagation()}>
-                                {isKing && (
-                                    <>
-                                        <button className="btn-action edit" title="Editar" onClick={() => lidandoComEditar(item.id, item.nome, item.tipo, item.poder, item.lore)}>✏️</button>
-                                        <button className="btn-action delete" title="Excluir" onClick={() => abrirModalDelete(item)}>🗑️</button>
-                                    </>
-                                )}
-                                {item.User ? (
-                                    <button
-                                        className="btn-action"
-                                        title={`Pertence a ${item.User.nome}`}
-                                        style={{ cursor: 'not-allowed', opacity: 0.6 }}
-                                        onClick={() => toast.error(`Este item já pertence ao aventureiro ${item.User.nome}.`)}
-                                    >
-                                        🔒
-                                    </button>
-                                ) : (
-                                    <button
-                                        className="btn-action loot"
-                                        title="Coletar"
-                                        onClick={() => abrirModalLoot(item)}
-                                    >
-                                        🖐️
-                                    </button>
-                                )}
+                                    <p style={{ fontSize: '0.8rem', color: '#7c7c8a', marginTop: '5px', fontStyle: 'italic' }}>
+                                        "{item.lore ? item.lore.substring(0, 50) + '...' : 'Sem história.'}"
+                                    </p>
+                                </div>
+
+                                <div className="member-actions" onClick={(e) => e.stopPropagation()}>
+                                    {isKing && (
+                                        <>
+                                            <button className="btn-action edit" title="Editar" onClick={() => lidandoComEditar(item.id, item.nome, item.tipo, item.poder, item.lore)}>✏️</button>
+                                            <button className="btn-action delete" title="Excluir" onClick={() => abrirModalDelete(item)}>🗑️</button>
+                                        </>
+                                    )}
+                                    {item.User ? (
+                                        <button
+                                            className="btn-action"
+                                            title={`Pertence a ${item.User.nome}`}
+                                            style={{ cursor: 'not-allowed', opacity: 0.6 }}
+                                            onClick={() => toast.error(`Este item já pertence ao aventureiro ${item.User.nome}.`)}
+                                        >
+                                            🔒
+                                        </button>
+                                    ) : (
+                                        <button
+                                            className="btn-action loot"
+                                            title="Coletar"
+                                            onClick={() => abrirModalLoot(item)}
+                                        >
+                                            🖐️
+                                        </button>
+                                    )}
+                                </div>
                             </div>
+                        ))}
+                    </div>
+                ) : (
+                    <div className="cards-grid">
+                        <div className="empty-card" style={{
+                            textAlign: 'center',
+                            padding: '40px 20px',
+                            background: 'rgba(32, 32, 36, 0.6)',
+                            borderRadius: '12px',
+                            border: '1px dashed #424249'
+                        }}>
+                            <span style={{ fontSize: '3rem', display: 'block', marginBottom: '15px' }}>📦</span>
+                            {isAdmin ? (
+                                <>
+                                    <h3 style={{ color: '#e1e1e6', marginBottom: '10px' }}>Nenhum artefato encontrado</h3>
+                                    <p style={{ color: '#7c7c8a', fontSize: '0.95rem' }}>
+                                        Os baús estão vazios... Cadastre um novo item para começar!
+                                    </p>
+                                </>
+                            ) : (
+                                <>
+                                    <h3 style={{ color: '#e1e1e6', marginBottom: '10px' }}>Aguardando novos itens</h3>
+                                    <p style={{ color: '#7c7c8a', fontSize: '0.95rem' }}>
+                                        Nenhum artefato disponível no momento. Aguarde o Mestre adicionar novos tesouros!
+                                    </p>
+                                </>
+                            )}
                         </div>
-                    ))}
-                </div>
+                    </div>
+                )}
 
             </div>
         </div>

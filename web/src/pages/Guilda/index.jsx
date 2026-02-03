@@ -32,6 +32,8 @@ export default function Guilda() {
 
     const isAdmin = user?.role === 'KING' || user?.role === 'MASTER';
 
+    const editingMe = user?.id === idEditar;
+
     useEffect(() => {
         if (!user) {
             navigate('/login');
@@ -196,7 +198,7 @@ export default function Guilda() {
                 confirmText="Sim, Banir!"
                 cancelText="Cancelar"
             >
-                <p>Tem certeza que deseja banir o aventureiro <strong>{memberToDelete?.nome}</strong> da guilda?</p>
+                <p>Tem certeza que deseja banir o {memberToDelete?.role === 'KING' ? 'Rei' : memberToDelete?.role === 'MASTER' ? 'Mestre' : 'Aventureiro'} <strong>{memberToDelete?.nome}</strong> da guilda?</p>
                 <p style={{ fontSize: '0.9rem', color: '#a8a8b3', marginTop: '10px' }}>Essa ação não pode ser desfeita.</p>
             </Modal>
 
@@ -217,19 +219,24 @@ export default function Guilda() {
                             <input type="text" placeholder="Nome do aventureiro" className="input-dark" value={novoNome} onChange={e => setNovoNome(e.target.value)} />
                         </div>
 
+                    {!editingMe && (
+                        <>
                         <div className="input-group">
                             <label className="form-label">E-mail</label>
                             <input type="email" placeholder="email@exemplo.com" className="input-dark" value={novoEmail} onChange={e => setNovoEmail(e.target.value)} />
                         </div>
+                    
 
                         <div className="input-group">
                             <label className="form-label">Nova Senha</label>
                             <input type="password" placeholder={idEditar ? "Deixe vazio para manter" : "Senha secreta"} className="input-dark" value={novaSenha} onChange={e => setNovaSenha(e.target.value)} />
                         </div>
+                        </>
+                    )}
 
                         <div className="input-group">
                             <label className="form-label">Cargo</label>
-                            <select className="input-dark" value={novoRole} onChange={e => setNovoRole(e.target.value)}>
+                            <select className="input-dark" value={novoRole} onChange={e => setNovoRole(e.target.value)} disabled={editingMe}>
                                 <option value="ADVENTURER">Aventureiro</option>
                                 <option value="MASTER">Mestre</option>
                                 {user.role === 'KING' && <option value="KING">Rei</option>}
@@ -267,7 +274,7 @@ export default function Guilda() {
                                 <span className={`role-badge role-${member.role.toLowerCase()}`}>{member.role}</span>
                                 <span className="member-email">{member.email}</span>
                             </div>
-                            <div className="member-actions">
+                            <div className="member-actions"> 
                                 <button className="btn-action edit" title="Editar" onClick={() => lidandoComEditar(member.id, member.nome, member.email, member.role)}>✏️</button>
                                 <button className="btn-action delete" title="Excluir" onClick={() => abrirModalDelete(member)}>🗑️</button>
                                 <button className="btn-action view" title="Ver Perfil" onClick={() => navigate(`/users/${member.id}`)}>👁️</button>

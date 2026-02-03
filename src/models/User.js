@@ -25,12 +25,6 @@ export default class User extends Model {
                         }
                     }
                 },
-
-                role: {
-                    type: Sequelize.STRING,
-                    defaultValue: 'ADVENTURER',
-                },
-
                 password_hash: {
                     type: Sequelize.STRING,
                     defaultValue: '',
@@ -45,6 +39,14 @@ export default class User extends Model {
                             msg: 'Campo senha deve ter entre 6 e 255 caracteres'
                         }
                     }
+                },
+                role: {
+                    type: Sequelize.STRING,
+                    defaultValue: 'AVENTUREIRO',
+                },
+                verification_code: {
+                    type: Sequelize.STRING,
+                    defaultValue: '',
                 },
 
             },

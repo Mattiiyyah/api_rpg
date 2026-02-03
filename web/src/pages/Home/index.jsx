@@ -19,7 +19,6 @@ export default function Home() {
     const [isLoading, setIsLoading] = useState(false);
 
     // Modal State
-    const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [showLogoutModal, setShowLogoutModal] = useState(false);
 
     // Inventory Details State
@@ -95,26 +94,6 @@ export default function Home() {
         }
     }
 
-    function excluirConta() {
-        setShowDeleteModal(true);
-    }
-
-    async function confirmDelete() {
-        try {
-            const token = localStorage.getItem('token');
-            const response = await axios.delete(`/users/${user.id}`, { headers: { Authorization: `Bearer ${token}` } });
-            toast.info(response.data.msg);
-            lidandoComLogout();
-        } catch (err) {
-            console.log(err);
-            const errors = err.response?.data?.errors || [];
-            if (errors.length > 0) errors.map(error => toast.error(error));
-            else toast.error("Erro ao excluir conta.");
-        } finally {
-            setShowDeleteModal(false);
-        }
-    }
-
     function abrirDetalhes(item) {
         setSelectedItem(item);
         setShowDetails(true);
@@ -130,18 +109,6 @@ export default function Home() {
     return (
         <div className="home-container">
             <MagicMouse />
-            <Modal
-                isOpen={showDeleteModal}
-                title="Excluir Conta?"
-                onConfirm={confirmDelete}
-                onCancel={() => setShowDeleteModal(false)}
-                confirmText="Excluir Para Sempre"
-                cancelText="Cancelar"
-            >
-                <p>Tem certeza que deseja apagar sua conta? Todas as suas conquistas, itens e histórias serão perdidas no Vazio Digital. 💀</p>
-                <p style={{ fontSize: '0.9rem', color: '#a8a8b3', marginTop: '10px' }}>Essa ação é irreversível.</p>
-            </Modal>
-
             <Modal
                 isOpen={showLogoutModal}
                 title="🚪 Deixar a Guilda?"
@@ -247,15 +214,16 @@ export default function Home() {
                         <span className={`role-badge role-${user.role.toLowerCase()}`}>{user.role}</span>
                     </div>
 
-                    <button className="btn-edit" onClick={abrirEdicao}>⚙️ Editar</button>
-                    <button className="btn-delete-account" onClick={excluirConta} title="Excluir Minha Conta">💀</button>
+                    {isAdmin && (
+                        <button className="btn-edit" onClick={abrirEdicao}>⚙️ Editar</button>
+                    )}
                     <button onClick={abrirModalLogout} className="btn-logout">Sair</button>
                 </div>
             </div>
 
             <div className="content-area">
 
-                {editandoPerfil && (
+                {(editandoPerfil) && (
                     <div className="recruit-section">
                         <h2>⚙️ Editando Seu Perfil</h2>
                         <form onSubmit={salvarPerfil} className="recruit-form">
