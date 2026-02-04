@@ -217,9 +217,9 @@ export default function Home() {
                         <span className={`role-badge role-${user.role.toLowerCase()}`}>{user.role}</span>
                     </div>
 
-                    {isAdmin && (
-                        <button className="btn-edit" onClick={abrirEdicao}>⚙️ Editar</button>
-                    )}
+
+                    <button className="btn-edit" onClick={abrirEdicao}>⚙️ Editar</button>
+
                     <button onClick={abrirModalLogout} className="btn-logout">Sair</button>
                 </div>
             </div>

@@ -48,6 +48,10 @@ export default class User extends Model {
                     type: Sequelize.STRING,
                     defaultValue: '',
                 },
+                verification_code_expires_at: {
+                    type: Sequelize.DATE,
+                    allowNull: true,
+                },
 
             },
 
@@ -73,8 +77,8 @@ export default class User extends Model {
         this.hasMany(models.Artefato, { foreignKey: 'user_id' });
 
         this.belongsToMany(models.Skill, {
-            foreignKey: 'user_id',    
-            through: models.UserSkill, 
+            foreignKey: 'user_id',
+            through: models.UserSkill,
             as: 'skills'
         });
     }

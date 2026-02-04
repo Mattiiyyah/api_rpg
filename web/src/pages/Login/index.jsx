@@ -91,7 +91,7 @@ export default function Login() {
       <div className="login-card">
         <div className="login-icon" style={iconStyle}>🔮</div>
         <h1 className="login-title">SudoGestor</h1>
-        <p className="login-subtitle">Entre com suas credenciais de mestre</p>
+        <p className="login-subtitle">Entre com suas credenciais de Rei, Mestre ou Aventureiro</p>
 
         <form onSubmit={lidaComLogin} className="login-form">
           <input
@@ -113,6 +113,16 @@ export default function Login() {
           <button type="submit" className="button-login" disabled={isLoading}>
             {isLoading ? 'Autenticando...' : 'sudo login'}
           </button>
+
+          <p style={{ marginTop: '20px', color: '#7c7c8a', fontSize: '0.9rem', textAlign: 'center' }}>
+            Ainda não é um Rei?{' '}
+            <span
+              onClick={() => navigate('/register')}
+              style={{ color: '#8257e5', cursor: 'pointer', fontWeight: 'bold' }}
+            >
+              Crie seu reino agora
+            </span>
+          </p>
         </form>
       </div>
     </div>

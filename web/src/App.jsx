@@ -11,6 +11,8 @@ import Guilda from './pages/Guilda';
 import Artefato from './pages/Artefato';
 import Skill from './pages/Skill';
 import User from './pages/User';
+import Register from './pages/Register';
+import Verify from './pages/Verify';
 import Footer from './components/Footer';
 
 function App() {
@@ -19,6 +21,8 @@ function App() {
       <main className="app-content">
         <Routes>
           <Route path="/" element={<Landing />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/verify" element={<Verify />} />
           <Route path="/login" element={<Login />} />
           <Route path="/dashboard" element={<Home />} />
           <Route path="/guilda" element={<Guilda />} />

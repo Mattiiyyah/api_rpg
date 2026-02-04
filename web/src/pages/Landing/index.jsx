@@ -40,9 +40,14 @@ export default function Landing() {
                     </div>
                 </div>
 
-                <button onClick={() => navigate('/login')} className="btn-enter">
-                    sudo login --rpg
-                </button>
+                <div className="landing-buttons" style={{ display: 'flex', flexDirection: 'column', gap: '15px', alignItems: 'center' }}>
+                    <button onClick={() => navigate('/login')} className="btn-enter">
+                        sudo login --rpg
+                    </button>
+                    <button onClick={() => navigate('/register')} className="btn-enter" style={{ background: 'linear-gradient(135deg, #04d361 0%, #02a34d 100%)' }}>
+                        sudo create --king
+                    </button>
+                </div>
             </div>
         </div>
     );

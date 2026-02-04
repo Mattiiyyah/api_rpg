@@ -241,7 +241,7 @@ export default function Guilda() {
                             <label className="form-label">Cargo</label>
                             <select className="input-dark" value={novoRole} onChange={e => setNovoRole(e.target.value)} disabled={editingMe}>
                                 <option value="ADVENTURER">Aventureiro</option>
-                                <option value="MASTER">Mestre</option>
+                                {(user.role === 'KING' || (user.role === 'MASTER' && editingMe)) && <option value="MASTER">Mestre</option>}
                                 {user.role === 'KING' && <option value="KING">Rei</option>}
                             </select>
                         </div>
@@ -278,8 +278,43 @@ export default function Guilda() {
                                 <span className="member-email">{member.email}</span>
                             </div>
                             <div className="member-actions">
-                                <button className="btn-action edit" title="Editar" onClick={() => lidandoComEditar(member.id, member.nome, member.email, member.role)}>✏️</button>
-                                <button className="btn-action delete" title="Excluir" onClick={() => abrirModalDelete(member)}>🗑️</button>
+                                <button
+                                    className="btn-action edit"
+                                    title={
+                                        (user.role === 'MASTER' && (member.role === 'KING' || (member.role === 'MASTER' && member.id !== user.id))) ||
+                                            (user.role === 'KING' && member.role === 'KING' && member.id !== user.id)
+                                            ? 'Sem permissão' : 'Editar'
+                                    }
+                                    onClick={() => lidandoComEditar(member.id, member.nome, member.email, member.role)}
+                                    disabled={
+                                        (user.role === 'MASTER' && (member.role === 'KING' || (member.role === 'MASTER' && member.id !== user.id))) ||
+                                        (user.role === 'KING' && member.role === 'KING' && member.id !== user.id)
+                                    }
+                                    style={
+                                        (user.role === 'MASTER' && (member.role === 'KING' || (member.role === 'MASTER' && member.id !== user.id))) ||
+                                            (user.role === 'KING' && member.role === 'KING' && member.id !== user.id)
+                                            ? { opacity: 0.4, cursor: 'not-allowed' } : {}
+                                    }
+                                >✏️</button> 
+
+                                <button
+                                    className="btn-action delete"
+                                    title={
+                                        (user.role === 'MASTER' && (member.role === 'KING' || member.role === 'MASTER')) ||
+                                            (user.role === 'KING' && member.role === 'KING')
+                                            ? 'Sem permissão' : 'Excluir'
+                                    }
+                                    onClick={() => abrirModalDelete(member)}
+                                    disabled={
+                                        (user.role === 'MASTER' && (member.role === 'KING' || member.role === 'MASTER')) ||
+                                        (user.role === 'KING' && member.role === 'KING')
+                                    }
+                                    style={
+                                        (user.role === 'MASTER' && (member.role === 'KING' || member.role === 'MASTER')) ||
+                                            (user.role === 'KING' && member.role === 'KING')
+                                            ? { opacity: 0.4, cursor: 'not-allowed' } : {}
+                                    }
+                                >🗑️</button>
                                 <button className="btn-action view" title="Ver Perfil" onClick={() => navigate(`/users/${member.id}`)}>👁️</button>
                             </div>
                         </div>

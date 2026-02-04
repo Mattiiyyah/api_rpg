@@ -27,20 +27,50 @@ class UserController {
         password,
         role: 'KING',
         verification_code: verificationCode,
+        verification_code_expires_at: new Date(Date.now() + 2 * 60 * 60 * 1000),
       });
 
       await transporter.sendMail({
         from: process.env.MAIL_FROM,
         to: user.email,
-        subject: 'Sua Aventura Começa! ⚔️ - Código de Verificação',
-        text: `Olá Rei! Seu código de verificação é: ${verificationCode}`,
+        subject: '👑 Bem-vindo ao Reino, Majestade! - Código de Verificação',
         html: `
-          <div style="font-family: Arial, sans-serif; color: #333;">
-            <h2>Bem-vindo ao SudoGestor! 🐧👑</h2>
-            <p>Para assumir seu trono, insira o código abaixo no sistema:</p>
-            <h1 style="color: #8257e5; letter-spacing: 5px;">${verificationCode}</h1>
-            <p>Se você não criou esta conta, ignore este e-mail.</p>
+        <div style="font-family: 'Courier New', monospace; background: #1a1a2e; color: #eee; padding: 30px; border-radius: 10px; max-width: 600px; margin: 0 auto;">
+          <div style="text-align: center; margin-bottom: 25px;">
+            <h1 style="color: #f7d354; margin: 0;">👑 SudoGestor</h1>
+            <p style="color: #a8a8b3; margin: 5px 0;">Sistema de Gestão de RPG</p>
           </div>
+          
+          <div style="background: rgba(247, 211, 84, 0.1); border: 1px solid rgba(247, 211, 84, 0.3); border-radius: 8px; padding: 20px; margin-bottom: 20px;">
+            <h2 style="color: #f7d354; margin-top: 0; text-align: center;">🏰 Bem-vindo ao Trono!</h2>
+            <p style="color: #c4c4cc; line-height: 1.6;">
+              Sua Majestade, o reino aguarda seu comando! 
+              Para assumir o trono, insira o código de verificação abaixo:
+            </p>
+          </div>
+
+          <div style="background: #16213e; border: 2px dashed #f7d354; border-radius: 10px; padding: 25px; text-align: center; margin-bottom: 20px;">
+            <p style="color: #a8a8b3; margin: 0 0 10px 0; font-size: 14px;">Seu código real de verificação:</p>
+            <div style="font-size: 32px; font-weight: bold; color: #f7d354; letter-spacing: 8px; font-family: 'Courier New', monospace;">
+              ${verificationCode}
+            </div>
+            <p style="color: #ff6b6b; margin: 15px 0 0 0; font-size: 12px;">⏰ Este código expira em 2 horas</p>
+          </div>
+
+          <div style="background: rgba(130, 87, 229, 0.1); border: 1px solid rgba(130, 87, 229, 0.3); border-radius: 8px; padding: 15px; margin-bottom: 20px;">
+            <p style="color: #8257e5; margin: 0; font-size: 13px; text-align: center;">
+              ⚔️ <strong>Próximos passos:</strong> Após verificar sua conta, você poderá 
+              recrutar Mestres e Aventureiros para sua guilda!
+            </p>
+          </div>
+
+          <hr style="border: 1px solid #333; margin: 20px 0;" />
+          
+          <p style="text-align: center; color: #666; font-size: 12px; margin: 0;">
+            🎲 SudoGestor RPG System<br>
+            <em>"Todo grande reino começa com um único comando."</em>
+          </p>
+        </div>
         `,
       });
 
@@ -82,7 +112,14 @@ class UserController {
         });
       }
 
+      if (user.verification_code_expires_at < new Date()) {
+        return res.status(401).json({
+          errors: ['Código de verificação expirado. Crie uma nova conta.'],
+        });
+      }
+
       user.verification_code = null;
+      user.verification_code_expires_at = null;
       await user.save();
 
       return res.json({
@@ -118,6 +155,12 @@ class UserController {
         });
       }
 
+      if (isMaster && req.body.role === 'MASTER') {
+        return res.status(401).json({
+          errors: ['Apenas o Rei pode recrutar um novo Mestre.']
+        });
+      }
+
       const totalUsers = await User.count();
 
       if (totalUsers >= 9) {
@@ -128,6 +171,66 @@ class UserController {
 
       const novoUser = await User.create(req.body);
       const { id, nome, email, role } = novoUser;
+
+      let tituloEmail = '';
+      let mensagemEmail = '';
+      let corTema = '';
+      let emoji = '';
+
+      if (req.body.role === 'MASTER') {
+        tituloEmail = '🧙 Convocação Real: Você agora é um Mestre!';
+        mensagemEmail = 'O Rei reconheceu sua sabedoria e experiência. Você foi nomeado Mestre da Guilda e agora possui poderes para gerenciar aventureiros.';
+        corTema = '#9b59b6';
+        emoji = '🔮';
+      } else {
+        tituloEmail = '⚔️ Alistamento Aprovado: Bem-vindo, Aventureiro!';
+        mensagemEmail = 'Sua força é necessária nas terras do reino. Pegue sua espada, prepare seus feitiços e junte-se à guilda para grandes aventuras!';
+        corTema = '#04d361';
+        emoji = '🛡️';
+      }
+
+      await transporter.sendMail({
+        from: process.env.MAIL_FROM,
+        to: novoUser.email,
+        subject: tituloEmail,
+        html: `
+        <div style="font-family: 'Courier New', monospace; background: #1a1a2e; color: #eee; padding: 30px; border-radius: 10px; max-width: 600px; margin: 0 auto;">
+          <div style="text-align: center; margin-bottom: 25px;">
+            <h1 style="color: #8257e5; margin: 0;">${emoji} SudoGestor</h1>
+            <p style="color: #a8a8b3; margin: 5px 0;">Sistema de Gestão de RPG</p>
+          </div>
+          
+          <div style="background: rgba(${req.body.role === 'MASTER' ? '155, 89, 182' : '4, 211, 97'}, 0.1); border: 1px solid ${corTema}; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
+            <h2 style="color: ${corTema}; margin-top: 0; text-align: center;">${tituloEmail}</h2>
+            <p style="color: #c4c4cc; line-height: 1.6; text-align: center;">
+              ${mensagemEmail}
+            </p>
+          </div>
+
+          <div style="background: #16213e; border: 2px dashed ${corTema}; border-radius: 10px; padding: 25px; margin-bottom: 20px;">
+            <p style="color: #a8a8b3; margin: 0 0 15px 0; font-size: 14px; text-align: center;">📜 Suas credenciais de acesso ao reino:</p>
+            <div style="background: #1a1a2e; border-radius: 8px; padding: 15px;">
+              <p style="color: #c4c4cc; margin: 8px 0;">📧 <strong>Login:</strong> <span style="color: ${corTema};">${novoUser.email}</span></p>
+              <p style="color: #c4c4cc; margin: 8px 0;">🔑 <strong>Senha:</strong> <span style="color: #ff6b6b; font-family: monospace;">${req.body.password}</span></p>
+            </div>
+          </div>
+
+          <div style="background: rgba(255, 107, 107, 0.1); border: 1px solid rgba(255, 107, 107, 0.3); border-radius: 8px; padding: 15px; margin-bottom: 20px;">
+            <p style="color: #ff6b6b; margin: 0; font-size: 13px; text-align: center;">
+              ⚠️ <strong>Importante:</strong> Altere sua senha após o primeiro login. 
+              Não compartilhe este pergaminho com ninguém!
+            </p>
+          </div>
+
+          <hr style="border: 1px solid #333; margin: 20px 0;" />
+          
+          <p style="text-align: center; color: #666; font-size: 12px; margin: 0;">
+            🎲 SudoGestor RPG System<br>
+            <em>"Que seus dados sempre rolem 20."</em>
+          </p>
+        </div>
+        `,
+      });
 
       let mensagemFinal = "";
 
@@ -186,7 +289,6 @@ class UserController {
       const isKing = req.userRole === 'KING';
       const isOwnProfile = req.userId === parseInt(req.params.id, 10);
 
-      // Permite se for KING/MASTER ou se for o próprio usuário vendo seu perfil
       if (!isMaster && !isKing && !isOwnProfile) {
         return res.status(401).json({
           errors: ['Apenas o Rei ou o Mestre da Guilda podem consultar os registros de outros aventureiros.']
@@ -244,7 +346,7 @@ class UserController {
       const targetIsMaster = user.role === 'MASTER';
       const isSelf = Number(req.params.id) === userId;
 
-      if((isKing && targetIsKing) && !isSelf) {
+      if ((isKing && targetIsKing) && !isSelf) {
         return res.status(401).json({
           errors: ['O Rei não pode alterar os registros de outro Rei.']
         });
@@ -262,9 +364,9 @@ class UserController {
         });
       }
 
-      if (!isMaster && !isKing) {
+      if (!isMaster && !isKing && !isSelf) {
         return res.status(401).json({
-          errors: ['Aventureiros não possuem autoridade para alterar registros. Procure um Mestre.']
+          errors: ['Você não tem permissão para alterar os registros de outros aventureiros.']
         });
       }
 
@@ -422,6 +524,137 @@ class UserController {
         dados: updatedUserSkill
       });
 
+
+    } catch (e) {
+      return res.status(400).json({
+        errors: e.errors?.map((err) => err.message) || ['Ocorreu um erro inesperado.'],
+      });
+    }
+  }
+
+  async passwordRecovery(req, res) {
+    try {
+
+      const { email } = req.body;
+
+      if (!email) {
+        return res.status(401).json({
+          errors: ['O email é obrigatório.']
+        })
+      }
+
+      const user = await User.findOne({ where: { email } });
+
+      if (!user) {
+        return res.status(401).json({
+          errors: ['Não fui possivel encontrar alguem com este email.']
+        })
+      }
+
+      const verificationCode = crypto.randomInt(100000, 999999).toString();
+
+      await user.update({
+        verification_code: verificationCode,
+        verification_code_expires_at: new Date(Date.now() + 15 * 60 * 1000)
+      });
+
+      await transporter.sendMail({
+        from: process.env.MAIL_FROM,
+        to: user.email,
+        subject: '🔑 Recuperação de Senha - SudoGestor',
+        html: `
+        <div style="font-family: 'Courier New', monospace; background: #1a1a2e; color: #eee; padding: 30px; border-radius: 10px; max-width: 600px; margin: 0 auto;">
+          <div style="text-align: center; margin-bottom: 25px;">
+            <h1 style="color: #8257e5; margin: 0;">🔐 SudoGestor</h1>
+            <p style="color: #a8a8b3; margin: 5px 0;">Sistema de Gestão de RPG</p>
+          </div>
+          
+          <div style="background: rgba(130, 87, 229, 0.1); border: 1px solid rgba(130, 87, 229, 0.3); border-radius: 8px; padding: 20px; margin-bottom: 20px;">
+            <h2 style="color: #8257e5; margin-top: 0; text-align: center;">🗝️ Recuperação de Senha</h2>
+            <p style="color: #c4c4cc; line-height: 1.6;">
+              Recebemos uma solicitação para redefinir a senha da sua conta. 
+              Use o código abaixo para criar uma nova senha:
+            </p>
+          </div>
+
+          <div style="background: #16213e; border: 2px dashed #8257e5; border-radius: 10px; padding: 25px; text-align: center; margin-bottom: 20px;">
+            <p style="color: #a8a8b3; margin: 0 0 10px 0; font-size: 14px;">Seu código mágico de recuperação:</p>
+            <div style="font-size: 32px; font-weight: bold; color: #04d361; letter-spacing: 8px; font-family: 'Courier New', monospace;">
+              ${verificationCode}
+            </div>
+            <p style="color: #ff6b6b; margin: 15px 0 0 0; font-size: 12px;">⏰ Este código expira em 15 minutos</p>
+          </div>
+
+          <div style="background: rgba(255, 107, 107, 0.1); border: 1px solid rgba(255, 107, 107, 0.3); border-radius: 8px; padding: 15px; margin-bottom: 20px;">
+            <p style="color: #ff6b6b; margin: 0; font-size: 13px; text-align: center;">
+              ⚠️ <strong>Atenção:</strong> Se você não solicitou esta recuperação, ignore este email. 
+              Sua conta permanece segura.
+            </p>
+          </div>
+
+          <hr style="border: 1px solid #333; margin: 20px 0;" />
+          
+          <p style="text-align: center; color: #666; font-size: 12px; margin: 0;">
+            🎲 SudoGestor RPG System<br>
+            <em>"Aventuras épicas merecem gestão épica."</em>
+          </p>
+        </div>
+        `,
+      });
+
+      return res.json({
+        msg: 'Código de recuperação enviado com sucesso.',
+        dados: { email: user.email }
+      });
+
+    } catch (e) {
+      return res.status(400).json({
+        errors: e.errors?.map((err) => err.message) || ['Ocorreu um erro inesperado.'],
+      });
+    }
+  }
+
+  async passwordReset(req, res) {
+    try {
+
+      const { email, verification_code, newPassword } = req.body;
+
+      if (!email || !verification_code || !newPassword) {
+        return res.status(401).json({
+          errors: ['Todos os campos são obrigatórios.']
+        })
+      }
+
+      const user = await User.findOne({ where: { email } });
+
+      if (!user) {
+        return res.status(401).json({
+          errors: ['Não foi possível encontrar alguém com este email.']
+        })
+      }
+
+      if (user.verification_code !== verification_code) {
+        return res.status(400).json({
+          errors: ['Código de verificação inválido.']
+        })
+      }
+
+      if (user.verification_code_expires_at < new Date()) {
+        return res.status(401).json({
+          errors: ['Código de verificação expirado. Solicite um novo código.']
+        })
+      }
+
+      user.password = newPassword;
+      user.verification_code = null;
+      user.verification_code_expires_at = null;
+
+      await user.save();
+
+      return res.json({
+        msg: 'Senha redefinida com sucesso.',
+        dados: { email: user.email }
+      });
 
     } catch (e) {
       return res.status(400).json({
