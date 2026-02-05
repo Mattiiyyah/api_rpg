@@ -2,7 +2,6 @@ import Skill from '../models/Skill.js';
 import UserSkill from '../models/UserSkill.js';
 
 class SkillController {
-    //store
     async store(req, res) {
 
         const isMaster = req.userRole === 'MASTER';
@@ -39,7 +38,6 @@ class SkillController {
         }
     }
 
-    //index 
     async index(req, res) {
         try {
             const skills = await Skill.findAll({
@@ -54,7 +52,6 @@ class SkillController {
         }
     }
 
-    //show
     async show(req, res) {
         try {
             const skill = await Skill.findByPk(req.params.id);
@@ -74,7 +71,6 @@ class SkillController {
         }
     }
 
-    //update
     async update(req, res) {
 
         const isMaster = req.userRole === 'MASTER';
@@ -116,7 +112,6 @@ class SkillController {
         }
     }
 
-    //delete
     async delete(req, res) {
 
         const isMaster = req.userRole === 'MASTER';

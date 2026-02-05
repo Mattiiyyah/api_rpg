@@ -23,11 +23,11 @@ export default function User() {
 
     const isKing = user?.role === 'KING';
 
-    // Inventory Details State
+    // Estado para Detalhes do Inventário
     const [showDetails, setShowDetails] = useState(false);
     const [selectedItem, setSelectedItem] = useState(null);
 
-    // Skill Details State
+    // Estado para Detalhes da Skill
     const [showSkillDetails, setShowSkillDetails] = useState(false);
     const [selectedSkill, setSelectedSkill] = useState(null);
 

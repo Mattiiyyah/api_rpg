@@ -7,7 +7,6 @@ import transporter from '../config/mail.js';
 
 class UserController {
 
-  //registerKing
   async registerKing(req, res) {
     try {
       // Gera código de 6 dígitos
@@ -87,7 +86,6 @@ class UserController {
     }
   }
 
-  //verifyKing
   async verifyKing(req, res) {
     try {
       const { email, verification_code } = req.body;
@@ -135,7 +133,6 @@ class UserController {
     }
   }
 
-  //resendCode
   async resendCode(req, res) {
     try {
       const { email } = req.body;
@@ -216,7 +213,6 @@ class UserController {
     }
   }
 
-  //store
   async store(req, res) {
 
     const isKing = req.userRole === 'KING';
@@ -466,7 +462,7 @@ class UserController {
         delete req.body.role;
       }
 
-      const currentRole = user.role; 
+      const currentRole = user.role;
 
       const novoDados = await user.update(req.body);
 
@@ -475,14 +471,14 @@ class UserController {
         let title = '🔐 Senha Atualizada';
         let message = 'Sua senha de acesso foi modificada recentemente.';
         let footer = 'Se você realizou esta alteração, ignore este aviso.';
-        let color = '#f7d354'; 
+        let color = '#f7d354';
 
         if (!isSelf) {
           subject = '👑 Atualização Real - Senha Modificada';
           title = '👑 Decreto Real: Senha Alterada';
           message = 'Vossa Majestade ou Mestre da Guilda decretou uma nova senha para sua conta.';
           footer = 'Utilize a nova senha fornecida pelo seu superior para acessar o reino.';
-          color = '#ff6b6b'; 
+          color = '#ff6b6b';
         }
 
         await transporter.sendMail({
@@ -528,19 +524,19 @@ class UserController {
           subject = '👑 Ascensão Divina - SudoGestor';
           title = '👑 Longa Vida ao Rei!';
           message = 'Os céus se abriram e o destino o escolheu. Você foi coroado como REI. Governe com sabedoria e justiça.';
-          color = '#f7d354'; 
+          color = '#f7d354';
           icon = '👑';
         } else if (novoDados.role === 'MASTER') {
           subject = '⚔️ Promoção da Guilda - SudoGestor';
           title = '⚔️ Você agora é um Mestre!';
           message = 'Sua habilidade e conhecimento foram reconhecidos. Você foi promovido a Mestre da Guilda. Guie os aventureiros em suas jornadas.';
-          color = '#8257e5'; 
+          color = '#8257e5';
           icon = '⚔️';
         } else {
           subject = '📜 Atualização de Status - SudoGestor';
           title = '🛡️ Retorno às Origens';
           message = 'Seus privilégios especiais foram revogados. Você agora trilha o caminho do Aventureiro novamente.';
-          color = '#04d361'; 
+          color = '#04d361';
           icon = '🛡️';
         }
 

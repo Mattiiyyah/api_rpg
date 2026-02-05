@@ -12,7 +12,6 @@ export default function Login() {
 
   const navigate = useNavigate();
 
-  // Dynamic glow calculation
   const glowIntensity = Math.min(password.length * 5, 50); // Max 50px glow
   const iconStyle = {
     filter: `drop-shadow(0 0 ${10 + glowIntensity}px var(--primary))`,
