@@ -13,6 +13,8 @@ import Skill from './pages/Skill';
 import User from './pages/User';
 import Register from './pages/Register';
 import Verify from './pages/Verify';
+import PasswordRecovery from './pages/PasswordRecovery';
+import PasswordReset from './pages/PasswordReset';
 import Footer from './components/Footer';
 
 function App() {
@@ -23,6 +25,8 @@ function App() {
           <Route path="/" element={<Landing />} />
           <Route path="/register" element={<Register />} />
           <Route path="/verify" element={<Verify />} />
+          <Route path="/password_recovery" element={<PasswordRecovery />} />
+          <Route path="/password_reset" element={<PasswordReset />} />
           <Route path="/login" element={<Login />} />
           <Route path="/dashboard" element={<Home />} />
           <Route path="/guilda" element={<Guilda />} />

@@ -34,7 +34,7 @@ export default function Register() {
                 password,
             });
 
-            toast.success('👑 Conta de Rei criada com sucesso, verifique seu email para ativar sua conta!');
+            toast.success(response.data.msg);
 
             navigate('/verify', {
                 state: { email: response.data.email }

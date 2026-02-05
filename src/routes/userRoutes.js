@@ -15,6 +15,7 @@ const passwordLimiter = rateLimit({
 
 router.post('/register', userController.registerKing); //registrar novo usuário (KING)
 router.post('/verify', userController.verifyKing); //verificar usuário (KING)
+router.post('/resend_code', passwordLimiter, userController.resendCode); //reenviar código (KING)
 
 router.get('/', userController.index); // visualizar todos os usuários
 router.post('/', loginRequired, userController.store); //criar novo usuário

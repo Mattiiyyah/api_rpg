@@ -28,12 +28,12 @@ export default function Verify() {
         setIsLoading(true);
 
         try {
-            await axios.post('/users/verify', {
+            const response = await axios.post('/users/verify', {
                 email: email,
                 verification_code: code,
             });
 
-            toast.success('👑 Conta verificada com sucesso! Você já pode fazer login!');
+            toast.success(response.data.msg);
             navigate('/login');
 
         } catch (err) {
@@ -45,6 +45,33 @@ export default function Verify() {
             } else {
                 toast.error('Erro desconhecido ao verificar conta.');
             }
+        }
+    };
+
+    const lidandoComReenvio = async () => {
+        if (email.length < 1) {
+            toast.warn('⚠️ Informe seu e-mail para reenviar o código.');
+            return;
+        }
+
+        setIsLoading(true);
+
+        try {
+            const response = await axios.post('/users/resend_code', {
+                email: email,
+            });
+
+            toast.success(response.data.msg);
+
+        } catch (err) {
+            const errors = err.response?.data?.errors || [];
+            if (errors.length > 0) {
+                errors.map(error => toast.error(error));
+            } else {
+                toast.error('Erro ao reenviar código.');
+            }
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -110,7 +137,7 @@ export default function Verify() {
                     <p style={{ marginTop: '20px', color: '#7c7c8a', fontSize: '0.9rem', textAlign: 'center' }}>
                         Não recebeu o código?{' '}
                         <span
-                            onClick={() => toast.info('📧 Um novo código será enviado em breve!')}
+                            onClick={lidandoComReenvio}
                             style={{ color: '#04d361', cursor: 'pointer', fontWeight: 'bold' }}
                         >
                             Reenviar código

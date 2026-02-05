@@ -123,6 +123,15 @@ export default function Login() {
               Crie seu reino agora
             </span>
           </p>
+
+          <p style={{ marginTop: '10px', color: '#7c7c8a', fontSize: '0.85rem', textAlign: 'center' }}>
+            <span
+              onClick={() => navigate('/password_recovery')}
+              style={{ color: '#ff6b6b', cursor: 'pointer' }}
+            >
+              Esqueceu sua senha?
+            </span>
+          </p>
         </form>
       </div>
     </div>

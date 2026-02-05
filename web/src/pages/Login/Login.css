@@ -12,6 +12,8 @@
     radial-gradient(circle at 30% 20%, rgba(130, 87, 229, 0.1) 0%, transparent 40%),
     radial-gradient(circle at 70% 80%, rgba(4, 211, 97, 0.05) 0%, transparent 40%);
   padding: 20px;
+  padding-top: 80px;
+  /* Prevent overlap with back button */
   position: relative;
   overflow: hidden;
 }
@@ -341,6 +343,7 @@
 @media (max-width: 768px) {
   .login-container {
     padding: 15px;
+    padding-top: 70px;
   }
 
   .login-card {

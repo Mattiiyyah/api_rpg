@@ -27,7 +27,7 @@ class UserController {
         password,
         role: 'KING',
         verification_code: verificationCode,
-        verification_code_expires_at: new Date(Date.now() + 2 * 60 * 60 * 1000),
+        verification_code_expires_at: new Date(Date.now() + 5 * 60 * 1000),
       });
 
       await transporter.sendMail({
@@ -54,7 +54,7 @@ class UserController {
             <div style="font-size: 32px; font-weight: bold; color: #f7d354; letter-spacing: 8px; font-family: 'Courier New', monospace;">
               ${verificationCode}
             </div>
-            <p style="color: #ff6b6b; margin: 15px 0 0 0; font-size: 12px;">⏰ Este código expira em 2 horas</p>
+            <p style="color: #ff6b6b; margin: 15px 0 0 0; font-size: 12px;">⏰ Este código expira em 5 minutos</p>
           </div>
 
           <div style="background: rgba(130, 87, 229, 0.1); border: 1px solid rgba(130, 87, 229, 0.3); border-radius: 8px; padding: 15px; margin-bottom: 20px;">
@@ -75,7 +75,7 @@ class UserController {
       });
 
       return res.json({
-        message: 'Rei cadastrado com sucesso! Verifique seu e-mail.',
+        msg: 'Rei cadastrado com sucesso! Verifique seu e-mail.',
         email: user.email
       });
 
@@ -123,7 +123,7 @@ class UserController {
       await user.save();
 
       return res.json({
-        message: 'Rei verificado com sucesso!',
+        msg: 'Rei verificado com sucesso!',
         user: { id: user.id, nome: user.nome, email: user.email, role: user.role },
       });
 
@@ -131,6 +131,87 @@ class UserController {
       console.log(e);
       return res.status(400).json({
         errors: e.errors ? e.errors.map((err) => err.message) : ['Erro ao verificar usuário'],
+      });
+    }
+  }
+
+  //resendCode
+  async resendCode(req, res) {
+    try {
+      const { email } = req.body;
+
+      if (!email) {
+        return res.status(401).json({
+          errors: ['O email é obrigatório.'],
+        });
+      }
+
+      const user = await User.findOne({ where: { email } });
+
+      if (!user) {
+        return res.status(404).json({
+          errors: ['Usuário não encontrado.'],
+        });
+      }
+
+      if (user.role !== 'KING') {
+        return res.status(400).json({
+          errors: ['Apenas Reis podem reenviar o código de verificação aqui.'],
+        });
+      }
+
+
+      const verificationCode = crypto.randomInt(100000, 999999).toString();
+
+      user.verification_code = verificationCode;
+      user.verification_code_expires_at = new Date(Date.now() + 5 * 60 * 1000); // 5 minutos
+
+      await user.save();
+
+      await transporter.sendMail({
+        from: process.env.MAIL_FROM,
+        to: user.email,
+        subject: '👑 Seu novo código de verificação - SudoGestor',
+        html: `
+        <div style="font-family: 'Courier New', monospace; background: #1a1a2e; color: #eee; padding: 30px; border-radius: 10px; max-width: 600px; margin: 0 auto;">
+          <div style="text-align: center; margin-bottom: 25px;">
+            <h1 style="color: #f7d354; margin: 0;">👑 SudoGestor</h1>
+            <p style="color: #a8a8b3; margin: 5px 0;">Sistema de Gestão de RPG</p>
+          </div>
+          
+          <div style="background: rgba(247, 211, 84, 0.1); border: 1px solid rgba(247, 211, 84, 0.3); border-radius: 8px; padding: 20px; margin-bottom: 20px;">
+            <h2 style="color: #f7d354; margin-top: 0; text-align: center;">🔄 Novo Código Solicitado</h2>
+            <p style="color: #c4c4cc; line-height: 1.6;">
+              Vossa Majestade solicitou um novo código de verificação. 
+              Aqui está a chave para acessar o trono:
+            </p>
+          </div>
+
+          <div style="background: #16213e; border: 2px dashed #f7d354; border-radius: 10px; padding: 25px; text-align: center; margin-bottom: 20px;">
+            <p style="color: #a8a8b3; margin: 0 0 10px 0; font-size: 14px;">Seu código real de verificação:</p>
+            <div style="font-size: 32px; font-weight: bold; color: #f7d354; letter-spacing: 8px; font-family: 'Courier New', monospace;">
+              ${verificationCode}
+            </div>
+            <p style="color: #ff6b6b; margin: 15px 0 0 0; font-size: 12px;">⏰ Este código expira em 5 minutos</p>
+          </div>
+
+          <p style="text-align: center; color: #666; font-size: 12px; margin: 0;">
+            🎲 SudoGestor RPG System<br>
+            <em>"O retorno do Rei."</em>
+          </p>
+        </div>
+        `,
+      });
+
+      return res.json({
+        msg: 'Novo código enviado com sucesso! Verifique seu e-mail.',
+        email: user.email
+      });
+
+    } catch (e) {
+      console.log(e);
+      return res.status(400).json({
+        errors: e.errors ? e.errors.map((err) => err.message) : ['Erro ao reenviar código'],
       });
     }
   }
@@ -217,8 +298,7 @@ class UserController {
 
           <div style="background: rgba(255, 107, 107, 0.1); border: 1px solid rgba(255, 107, 107, 0.3); border-radius: 8px; padding: 15px; margin-bottom: 20px;">
             <p style="color: #ff6b6b; margin: 0; font-size: 13px; text-align: center;">
-              ⚠️ <strong>Importante:</strong> Altere sua senha após o primeiro login. 
-              Não compartilhe este pergaminho com ninguém!
+              ⚠️ <strong>Importante:</strong> Altere sua senha através do link de redefinição de senha no login.
             </p>
           </div>
 
@@ -386,7 +466,110 @@ class UserController {
         delete req.body.role;
       }
 
+      const currentRole = user.role; 
+
       const novoDados = await user.update(req.body);
+
+      if (req.body.password) {
+        let subject = '🔐 Segurança - Senha Alterada';
+        let title = '🔐 Senha Atualizada';
+        let message = 'Sua senha de acesso foi modificada recentemente.';
+        let footer = 'Se você realizou esta alteração, ignore este aviso.';
+        let color = '#f7d354'; 
+
+        if (!isSelf) {
+          subject = '👑 Atualização Real - Senha Modificada';
+          title = '👑 Decreto Real: Senha Alterada';
+          message = 'Vossa Majestade ou Mestre da Guilda decretou uma nova senha para sua conta.';
+          footer = 'Utilize a nova senha fornecida pelo seu superior para acessar o reino.';
+          color = '#ff6b6b'; 
+        }
+
+        await transporter.sendMail({
+          from: process.env.MAIL_FROM,
+          to: user.email,
+          subject: subject,
+          html: `
+            <div style="font-family: 'Courier New', monospace; background: #1a1a2e; color: #eee; padding: 30px; border-radius: 10px; max-width: 600px; margin: 0 auto;">
+              <div style="text-align: center; margin-bottom: 25px;">
+                <h1 style="color: ${color}; margin: 0;">SudoGestor</h1>
+              </div>
+              
+              <div style="background: rgba(26, 26, 46, 0.5); border: 2px solid ${color}; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
+                <h2 style="color: ${color}; margin-top: 0; text-align: center; border-bottom: 1px dashed ${color}; padding-bottom: 10px;">${title}</h2>
+                <p style="color: #c4c4cc; line-height: 1.6; text-align: center; font-size: 16px;">
+                  ${message}
+                </p>
+              </div>
+
+               <div style="background: rgba(255, 107, 107, 0.1); border: 1px solid rgba(255, 107, 107, 0.3); border-radius: 8px; padding: 15px; margin-bottom: 20px;">
+                <p style="color: #ff6b6b; margin: 0; font-size: 13px; text-align: center;">
+                  ⚠️ <strong>Atenção:</strong> ${footer}
+                </p>
+              </div>
+
+              <p style="text-align: center; color: #666; font-size: 12px; margin: 20px 0 0 0;">
+                🎲 SudoGestor RPG System
+              </p>
+            </div>
+            `,
+        });
+      }
+
+      // Verifica se houve mudança de cargo
+      if (novoDados.role !== currentRole) {
+        let subject = '';
+        let title = '';
+        let message = '';
+        let color = '';
+        let icon = '';
+
+        if (novoDados.role === 'KING') {
+          subject = '👑 Ascensão Divina - SudoGestor';
+          title = '👑 Longa Vida ao Rei!';
+          message = 'Os céus se abriram e o destino o escolheu. Você foi coroado como REI. Governe com sabedoria e justiça.';
+          color = '#f7d354'; 
+          icon = '👑';
+        } else if (novoDados.role === 'MASTER') {
+          subject = '⚔️ Promoção da Guilda - SudoGestor';
+          title = '⚔️ Você agora é um Mestre!';
+          message = 'Sua habilidade e conhecimento foram reconhecidos. Você foi promovido a Mestre da Guilda. Guie os aventureiros em suas jornadas.';
+          color = '#8257e5'; 
+          icon = '⚔️';
+        } else {
+          subject = '📜 Atualização de Status - SudoGestor';
+          title = '🛡️ Retorno às Origens';
+          message = 'Seus privilégios especiais foram revogados. Você agora trilha o caminho do Aventureiro novamente.';
+          color = '#04d361'; 
+          icon = '🛡️';
+        }
+
+        await transporter.sendMail({
+          from: process.env.MAIL_FROM,
+          to: user.email,
+          subject: subject,
+          html: `
+            <div style="font-family: 'Courier New', monospace; background: #1a1a2e; color: #eee; padding: 30px; border-radius: 10px; max-width: 600px; margin: 0 auto;">
+              <div style="text-align: center; margin-bottom: 25px;">
+                <h1 style="color: ${color}; margin: 0;">${icon} SudoGestor</h1>
+                <p style="color: #a8a8b3; margin: 5px 0;">Sistema de Gestão de RPG</p>
+              </div>
+              
+              <div style="background: rgba(26, 26, 46, 0.5); border: 2px solid ${color}; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
+                <h2 style="color: ${color}; margin-top: 0; text-align: center; border-bottom: 1px dashed ${color}; padding-bottom: 10px;">${title}</h2>
+                <p style="color: #c4c4cc; line-height: 1.6; text-align: center; font-size: 16px;">
+                  ${message}
+                </p>
+              </div>
+
+              <p style="text-align: center; color: #666; font-size: 12px; margin: 20px 0 0 0;">
+                🎲 SudoGestor RPG System<br>
+                <em>"O destino muda como o rolar dos dados."</em>
+              </p>
+            </div>
+            `,
+        });
+      }
 
       let mensagemFinal = "";
 
@@ -555,7 +738,7 @@ class UserController {
 
       await user.update({
         verification_code: verificationCode,
-        verification_code_expires_at: new Date(Date.now() + 15 * 60 * 1000)
+        verification_code_expires_at: new Date(Date.now() + 5 * 60 * 1000)
       });
 
       await transporter.sendMail({
@@ -582,7 +765,7 @@ class UserController {
             <div style="font-size: 32px; font-weight: bold; color: #04d361; letter-spacing: 8px; font-family: 'Courier New', monospace;">
               ${verificationCode}
             </div>
-            <p style="color: #ff6b6b; margin: 15px 0 0 0; font-size: 12px;">⏰ Este código expira em 15 minutos</p>
+            <p style="color: #ff6b6b; margin: 15px 0 0 0; font-size: 12px;">⏰ Este código expira em 5 minutos</p>
           </div>
 
           <div style="background: rgba(255, 107, 107, 0.1); border: 1px solid rgba(255, 107, 107, 0.3); border-radius: 8px; padding: 15px; margin-bottom: 20px;">
@@ -650,6 +833,30 @@ class UserController {
       user.verification_code_expires_at = null;
 
       await user.save();
+
+      await transporter.sendMail({
+        from: process.env.MAIL_FROM,
+        to: user.email,
+        subject: '🔐 Senha Redefinida com Sucesso - SudoGestor',
+        html: `
+        <div style="font-family: 'Courier New', monospace; background: #1a1a2e; color: #eee; padding: 30px; border-radius: 10px; max-width: 600px; margin: 0 auto;">
+          <div style="text-align: center; margin-bottom: 25px;">
+            <h1 style="color: #04d361; margin: 0;">🔐 SudoGestor</h1>
+          </div>
+          
+          <div style="background: rgba(4, 211, 97, 0.1); border: 1px solid #04d361; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
+            <h2 style="color: #04d361; margin-top: 0; text-align: center;">✅ Senha Redefinida</h2>
+            <p style="color: #c4c4cc; line-height: 1.6; text-align: center;">
+              Sua senha de acesso foi redefinida com sucesso através do processo de recuperação.
+            </p>
+          </div>
+
+          <p style="text-align: center; color: #666; font-size: 12px; margin: 0;">
+            Agora você pode acessar o reino com suas novas credenciais.
+          </p>
+        </div>
+        `,
+      });
 
       return res.json({
         msg: 'Senha redefinida com sucesso.',
