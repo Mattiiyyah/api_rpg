@@ -142,7 +142,13 @@ Siga os passos para invocar o servidor em sua máquina.
 3.  **Configure o Ambiente (.env)**
     Crie um arquivo `.env` na raiz com as segredos do seu banco de dados (use `.env.example`).
 
-4.  **Execute o Ritual**
+4.  **Materialize o Mundo (Banco de Dados)**
+    ```bash
+    npx sequelize-cli db:create    # Cria o banco
+    npx sequelize-cli db:migrate   # Cria as tabelas
+    ```
+
+5.  **Execute o Ritual**
     ```bash
     # Terminal 1 (Backend)
     npm start
