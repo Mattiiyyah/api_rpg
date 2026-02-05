@@ -173,7 +173,7 @@ export default function User() {
                             </p>
                         </div>
 
-                        {isKing && (
+                        {isKing && (profile.role !== 'KING' || user.id === profile.id) && (
                             <div style={{
                                 marginTop: '20px',
                                 borderTop: '1px solid #323238',

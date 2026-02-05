@@ -665,6 +665,12 @@ class UserController {
         });
       }
 
+      if (userId.role === 'KING' && userId.id !== req.userId) {
+        return res.status(401).json({
+          errors: ['Um Rei não pode alterar o nível dashabilidades de outro Rei.']
+        });
+      }
+
       const skillId = await Skill.findByPk(req.params.skill_id);
 
       if (!skillId) {

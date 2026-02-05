@@ -50,22 +50,28 @@ Principais encantamentos disponíveis para consumo:
 | Método | Rota | Descrição | Permissão |
 | :--- | :--- | :--- | :--- |
 | `POST` | `/users/register` | Cria o primeiro **Rei** 👑 | *Livre* |
-| `POST` | `/users` | Cria Aventureiros ou Mestres | *King/Master* |
-| `GET` | `/users/:id` | Vê detalhes de um herói | *ACL* |
-| `PATCH` | `/users/:id/skills/:id` | Upa o nível de uma skill | *ACL* |
+| `POST` | `/users` | Cria Aventureiros ou Mestres (Mestre somente podem ser criados e editados por REIS, REIS podem ser criados por outros REIS porém não podem ser editados por outros REIS.) | *King/Master* |
+| `GET` | `/users/:id` | Vê detalhes de um herói | *King/Master/Self* |
+| `PUT` | `/users/:id` | Atualiza dados do herói | *King/Master/Self* |
+| `DELETE` | `/users/:id` | Bane uma alma do reino | *King/Master* |
+| `PATCH` | `/users/:id/skills/:id` | Upa o nível de uma skill | *King* |
 
 ### 🏺 Artefatos (Items)
 | Método | Rota | Descrição | Permissão |
 | :--- | :--- | :--- | :--- |
 | `GET` | `/artefatos` | Lista todos os itens do mundo | *Livre* |
 | `POST` | `/artefatos` | Forja um novo item lendário | *Master/King* |
-| `PATCH` | `/artefatos/loot/:id` | **Saqueia** um item sem dono | *Adventurer* |
+| `PUT` | `/artefatos/:id` | Altera a essência de um item | *King* |
+| `DELETE` | `/artefatos/:id` | Desencanta um item (Destrói) | *King* |
+| `PATCH` | `/artefatos/loot/:id` | **Saqueia** um item sem dono | *Todos (Autenticado)* |
 
 ### ✨ Habilidades (Skills)
 | Método | Rota | Descrição | Permissão |
 | :--- | :--- | :--- | :--- |
 | `POST` | `/skills` | Cria uma nova magia | *Master/King* |
-| `POST` | `/skills/:id/aprender` | Aprende uma habilidade | *Adventurer* |
+| `PUT` | `/skills/:id` | Refina uma magia existente | *King* |
+| `DELETE` | `/skills/:id` | Apaga o conhecimento (Destrói) | *King* |
+| `POST` | `/skills/:id/aprender` | Aprende uma habilidade | *Todos (Autenticado)* |
 
 ---
 
