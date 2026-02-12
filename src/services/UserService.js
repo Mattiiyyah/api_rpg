@@ -33,7 +33,7 @@ class UserService {
         return user;
     }
 
-    async recruitUser(requesterRole, requesterId, data) {
+    async recruitUser(requesterRole, data) {
         const isKing = requesterRole === 'KING';
         const isMaster = requesterRole === 'MASTER';
 
