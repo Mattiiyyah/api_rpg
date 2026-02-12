@@ -31,11 +31,12 @@ Aventure-se pelos diretórios do sistema:
 api_rpg/
 ├── 📂 src/
 │   ├── 📂 config/          # Configurações do Banco e E-mail
-│   ├── 📂 controllers/     # A lógica dos Magos (Regras de Negócio)
+│   ├── 📂 controllers/     # Os Guardiões da Entrada (Recebem e Respondem)
 │   ├── 📂 database/        # Migrations e Seeds (Gênese do Mundo)
 │   ├── 📂 middlewares/     # Guardiões dos Portões (Autenticação)
 │   ├── 📂 models/          # Representação das Entidades
-│   └── 📂 routes/          # Caminhos do Reino (Endpoints)
+│   ├── 📂 routes/          # Caminhos do Reino (Endpoints)
+│   └── 📂 services/        # O Grimório de Feitiços (Regras de Negócio)
 ├── 📂 web/                 # O Portal Visual (React Frontend)
 └── 📄 .env.example         # Molde das Chaves Secretas
 ```
