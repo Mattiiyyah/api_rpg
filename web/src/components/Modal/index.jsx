@@ -1,3 +1,4 @@
+import React from 'react';
 import './Modal.css';
 
 export default function Modal({ isOpen, title, children, onConfirm, onCancel, confirmText = 'Confirmar', cancelText = 'Cancelar' }) {
