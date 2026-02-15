@@ -97,6 +97,18 @@ export default function Guilda() {
         const token = localStorage.getItem('token');
         const headers = { Authorization: `Bearer ${token}` };
 
+        if (!idEditar && novaSenha.length < 6) {
+            toast.warn("A senha deve ter no mínimo 6 caracteres.");
+            setLogado(false);
+            return;
+        }
+
+        if (idEditar && novaSenha && novaSenha.length < 6) {
+            toast.warn("A nova senha deve ter no mínimo 6 caracteres.");
+            setLogado(false);
+            return;
+        }
+
         try {
             if (idEditar) {
                 const response = await axios.put(`/users/${idEditar}`, {
@@ -219,20 +231,20 @@ export default function Guilda() {
 
                         <div className="input-group">
                             <label className="form-label">Nome</label>
-                            <input type="text" placeholder="Nome do aventureiro" className="input-dark" value={novoNome} onChange={e => setNovoNome(e.target.value)} />
+                            <input type="text" placeholder="Nome do aventureiro" className="input-dark" value={novoNome} onChange={e => setNovoNome(e.target.value)} required />
                         </div>
 
                         {!editingMe && (
                             <>
                                 <div className="input-group">
                                     <label className="form-label">E-mail</label>
-                                    <input type="email" placeholder="email@exemplo.com" className="input-dark" value={novoEmail} onChange={e => setNovoEmail(e.target.value)} />
+                                    <input type="email" placeholder="email@exemplo.com" className="input-dark" value={novoEmail} onChange={e => setNovoEmail(e.target.value)} required />
                                 </div>
 
 
                                 <div className="input-group">
                                     <label className="form-label">Nova Senha</label>
-                                    <input type="password" placeholder={idEditar ? "Deixe vazio para manter" : "Senha secreta"} className="input-dark" value={novaSenha} onChange={e => setNovaSenha(e.target.value)} />
+                                    <input type="password" placeholder={idEditar ? "Deixe vazio para manter" : "Senha secreta"} className="input-dark" value={novaSenha} onChange={e => setNovaSenha(e.target.value)} required={!idEditar} />
                                 </div>
                             </>
                         )}
@@ -295,7 +307,7 @@ export default function Guilda() {
                                             (user.role === 'KING' && member.role === 'KING' && member.id !== user.id)
                                             ? { opacity: 0.4, cursor: 'not-allowed' } : {}
                                     }
-                                >✏️</button> 
+                                >✏️</button>
 
                                 <button
                                     className="btn-action delete"

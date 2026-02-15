@@ -25,6 +25,11 @@ export default function Register() {
             return;
         }
 
+        if (password.length < 6) {
+            toast.warn('⚠️ A senha deve ter no mínimo 6 caracteres!');
+            return;
+        }
+
         setIsLoading(true);
 
         try {

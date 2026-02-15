@@ -17,7 +17,7 @@ class UserController {
     } catch (e) {
       console.log(e);
       return res.status(e.status || 400).json({
-        errors: e.errors || ['Erro ao criar usuário'],
+        errors: e.errors?.map(err => typeof err === 'string' ? err : err.message) || ['Erro ao criar usuário'],
       });
     }
   }
@@ -34,7 +34,7 @@ class UserController {
     } catch (e) {
       console.log(e);
       return res.status(e.status || 400).json({
-        errors: e.errors || ['Erro ao verificar usuário'],
+        errors: e.errors?.map(err => typeof err === 'string' ? err : err.message) || ['Erro ao verificar usuário'],
       });
     }
   }
@@ -51,7 +51,7 @@ class UserController {
     } catch (e) {
       console.log(e);
       return res.status(e.status || 400).json({
-        errors: e.errors || ['Erro ao reenviar código'],
+        errors: e.errors?.map(err => typeof err === 'string' ? err : err.message) || ['Erro ao reenviar código'],
       });
     }
   }
@@ -76,7 +76,7 @@ class UserController {
 
     } catch (e) {
       return res.status(e.status || 400).json({
-        errors: e.errors || ['Erro ao recrutar usuário'],
+        errors: e.errors?.map(err => typeof err === 'string' ? err : err.message) || ['Erro ao recrutar usuário'],
       });
     }
   }
@@ -175,7 +175,7 @@ class UserController {
 
     } catch (e) {
       return res.status(e.status || 400).json({
-        errors: e.errors || ['Ocorreu um erro inesperado.'],
+        errors: e.errors?.map(err => typeof err === 'string' ? err : err.message) || ['Ocorreu um erro inesperado.'],
       });
     }
   }
@@ -188,7 +188,7 @@ class UserController {
 
     } catch (e) {
       return res.status(e.status || 400).json({
-        errors: e.errors || ['Ocorreu um erro inesperado.'],
+        errors: e.errors?.map(err => typeof err === 'string' ? err : err.message) || ['Ocorreu um erro inesperado.'],
       });
     }
   }
@@ -204,7 +204,7 @@ class UserController {
 
     } catch (e) {
       return res.status(e.status || 400).json({
-        errors: e.errors || ['Ocorreu um erro inesperado.'],
+        errors: e.errors?.map(err => typeof err === 'string' ? err : err.message) || ['Ocorreu um erro inesperado.'],
       });
     }
   }
@@ -220,7 +220,7 @@ class UserController {
 
     } catch (e) {
       return res.status(e.status || 400).json({
-        errors: e.errors || ['Ocorreu um erro inesperado.'],
+        errors: e.errors?.map(err => typeof err === 'string' ? err : err.message) || ['Ocorreu um erro inesperado.'],
       });
     }
   }
@@ -237,7 +237,7 @@ class UserController {
 
     } catch (e) {
       return res.status(e.status || 400).json({
-        errors: e.errors || ['Ocorreu um erro inesperado.'],
+        errors: e.errors?.map(err => typeof err === 'string' ? err : err.message) || ['Ocorreu um erro inesperado.'],
       });
     }
   }

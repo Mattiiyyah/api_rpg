@@ -14,7 +14,7 @@ class SkillController {
 
         } catch (e) {
             return res.status(e.status || 400).json({
-                errors: e.errors || ['Ocorreu um erro inesperado.']
+                errors: e.errors?.map(err => typeof err === 'string' ? err : err.message) || ['Ocorreu um erro inesperado.']
             })
         }
     }
@@ -28,7 +28,7 @@ class SkillController {
             return res.json(skills);
         } catch (e) {
             return res.status(400).json({
-                errors: e.errors?.map(err => err.message) || ['Ocorreu um erro inesperado.'],
+                errors: e.errors?.map(err => typeof err === 'string' ? err : err.message) || ['Ocorreu um erro inesperado.'],
             })
         }
     }
@@ -47,7 +47,7 @@ class SkillController {
             return res.json({ id, nome, tipo, dano, custo_mana, descricao });
         } catch (e) {
             return res.status(400).json({
-                errors: e.errors?.map(err => err.message) || ['Ocorreu um erro inesperado.'],
+                errors: e.errors?.map(err => typeof err === 'string' ? err : err.message) || ['Ocorreu um erro inesperado.'],
             });
         }
     }
@@ -64,7 +64,7 @@ class SkillController {
 
         } catch (e) {
             return res.status(e.status || 400).json({
-                errors: e.errors || ['Ocorreu um erro inesperado.'],
+                errors: e.errors?.map(err => typeof err === 'string' ? err : err.message) || ['Ocorreu um erro inesperado.'],
             });
         }
     }
@@ -79,7 +79,7 @@ class SkillController {
 
         } catch (e) {
             return res.status(e.status || 400).json({
-                errors: e.errors || ['Ocorreu um erro inesperado.'],
+                errors: e.errors?.map(err => typeof err === 'string' ? err : err.message) || ['Ocorreu um erro inesperado.'],
             });
         }
     }
@@ -95,7 +95,7 @@ class SkillController {
 
         } catch (e) {
             return res.status(e.status || 400).json({
-                errors: e.errors || ['Ocorreu um erro inesperado.'],
+                errors: e.errors?.map(err => typeof err === 'string' ? err : err.message) || ['Ocorreu um erro inesperado.'],
             });
         }
     }

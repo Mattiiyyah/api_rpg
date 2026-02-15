@@ -14,7 +14,7 @@ class ArtefatoController {
 
         } catch (e) {
             return res.status(e.status || 400).json({
-                errors: e.errors || ['Ocorreu um erro inesperado.'],
+                errors: e.errors?.map(err => typeof err === 'string' ? err : err.message) || ['Ocorreu um erro inesperado.'],
             });
         }
     }
@@ -32,7 +32,7 @@ class ArtefatoController {
             return res.json(artefatos);
         } catch (e) {
             return res.status(400).json({
-                errors: e.errors?.map(err => err.message) || ['Ocorreu um erro inesperado.'],
+                errors: e.errors?.map(err => typeof err === 'string' ? err : err.message) || ['Ocorreu um erro inesperado.'],
             });
         }
     }
@@ -57,7 +57,7 @@ class ArtefatoController {
             return res.json({ id, nome, tipo, poder, lore });
         } catch (e) {
             return res.status(400).json({
-                errors: e.errors?.map(err => err.message) || ['Ocorreu um erro inesperado.'],
+                errors: e.errors?.map(err => typeof err === 'string' ? err : err.message) || ['Ocorreu um erro inesperado.'],
             });
         }
     }
@@ -73,7 +73,7 @@ class ArtefatoController {
             });
         } catch (e) {
             return res.status(e.status || 400).json({
-                errors: e.errors || ['Ocorreu um erro inesperado.'],
+                errors: e.errors?.map(err => typeof err === 'string' ? err : err.message) || ['Ocorreu um erro inesperado.'],
             });
         }
     }
@@ -88,7 +88,7 @@ class ArtefatoController {
 
         } catch (e) {
             return res.status(e.status || 400).json({
-                errors: e.errors || ['Ocorreu um erro inesperado.'],
+                errors: e.errors?.map(err => typeof err === 'string' ? err : err.message) || ['Ocorreu um erro inesperado.'],
             });
         }
     }
@@ -104,7 +104,7 @@ class ArtefatoController {
 
         } catch (e) {
             return res.status(e.status || 400).json({
-                errors: e.errors || ['Ocorreu um erro inesperado.']
+                errors: e.errors?.map(err => typeof err === 'string' ? err : err.message) || ['Ocorreu um erro inesperado.']
             });
         }
     }
