@@ -58,7 +58,7 @@ class UserController {
 
   async store(req, res) {
     try {
-      const user = await UserService.recruitUser(req.userRole, req.userId, req.body);
+      const user = await UserService.recruitUser(req.userRole, req.body);
 
       let mensagemFinal = "";
       if (user.role === 'KING') {
@@ -75,6 +75,7 @@ class UserController {
       });
 
     } catch (e) {
+      console.log(e);
       return res.status(e.status || 400).json({
         errors: e.errors?.map(err => typeof err === 'string' ? err : err.message) || ['Erro ao recrutar usuário'],
       });

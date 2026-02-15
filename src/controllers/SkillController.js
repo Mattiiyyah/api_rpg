@@ -1,5 +1,6 @@
 import Skill from '../models/Skill.js';
 import UserSkill from '../models/UserSkill.js';
+import SkillService from '../services/SkillService.js';
 
 class SkillController {
     async store(req, res) {
@@ -99,6 +100,7 @@ class SkillController {
             });
         }
     }
+
 }
 
 export default new SkillController();

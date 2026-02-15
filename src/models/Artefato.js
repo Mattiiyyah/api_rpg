@@ -6,7 +6,7 @@ export default class Artefato extends Model {
       {
         nome: {
           type: Sequelize.STRING,
-          defaultValue: '',
+          allowNull: false,
           validate: {
             len: {
               args: [3, 255],
@@ -16,7 +16,7 @@ export default class Artefato extends Model {
         },
         poder: {
           type: Sequelize.FLOAT,
-          defaultValue: 0,
+          allowNull: false,
           validate: {
             isFloat: {
               msg: 'O poder deve ser um número'
@@ -33,7 +33,7 @@ export default class Artefato extends Model {
         },
         tipo: {
           type: Sequelize.STRING,
-          defaultValue: '',
+          allowNull: false,
           validate: {
             len: {
               args: [3, 255],

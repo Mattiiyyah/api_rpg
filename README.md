@@ -94,6 +94,18 @@ O reino é regido por leis estritas (Middlewares) que determinam quem pode alter
 
 ---
 
+## ⚖️ Leis da Criação (Limits)
+
+Para manter o equilíbrio do universo, os deuses (Devs) impuseram limites estritos à criação de matéria:
+
+| Entidade | Limite Máximo | Motivo (Lore) |
+| :--- | :--- | :--- |
+| **Usuários** | **9** | O Conselho dos Nove detém o poder absoluto. |
+| **Artefatos** | **20** | O mundo não suportaria mais poder concentrado sem colapsar. |
+| **Habilidades** | **10** | O fluxo de mana é finito e só pode sustentar dez grandes magias. |
+
+---
+
 ## ⚔️ Funcionalidades de Batalha (Features)
 
 ### 1. Sistema de Loot Realista (1:N)

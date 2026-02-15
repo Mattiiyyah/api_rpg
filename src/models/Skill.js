@@ -6,7 +6,7 @@ export default class Skill extends Model {
       {
         nome: {
           type: Sequelize.STRING,
-          defaultValue: '',
+          allowNull: false,
           validate: {
             len: {
               args: [3, 255],
@@ -16,7 +16,7 @@ export default class Skill extends Model {
         },
         tipo: {
           type: Sequelize.STRING,
-          defaultValue: '',
+          allowNull: false,
           validate: {
             len: {
               args: [3, 255],
@@ -26,7 +26,7 @@ export default class Skill extends Model {
         },
         dano: {
           type: Sequelize.FLOAT,
-          defaultValue: 0,
+          allowNull: false,
           validate: {
             isFloat: {
               msg: 'O dano deve ser um número',
@@ -43,7 +43,7 @@ export default class Skill extends Model {
         },
         custo_mana: {
           type: Sequelize.FLOAT,
-          defaultValue: 0,
+          allowNull: false,
           validate: {
             isFloat: {
               msg: 'O custo de mana deve ser um número',

@@ -89,6 +89,7 @@ class SkillService {
 
         return novaUserSkill;
     }
+
 }
 
 export default new SkillService();

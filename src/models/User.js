@@ -7,7 +7,7 @@ export default class User extends Model {
             {
                 nome: {
                     type: Sequelize.STRING,
-                    defaultValue: '',
+                    allowNull: false,
                     validate: {
                         len: {
                             args: [3, 255],
@@ -18,7 +18,7 @@ export default class User extends Model {
 
                 email: {
                     type: Sequelize.STRING,
-                    defaultValue: '',
+                    allowNull: false,
                     validate: {
                         isEmail: {
                             msg: 'Email inválido'
@@ -32,7 +32,7 @@ export default class User extends Model {
 
                 password: {
                     type: Sequelize.VIRTUAL,
-                    defaultValue: '',
+                    allowNull: false,
                     validate: {
                         len: {
                             args: [6, 255],

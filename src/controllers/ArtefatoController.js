@@ -1,5 +1,6 @@
 import Artefato from '../models/Artefato.js';
 import User from '../models/User.js';
+import ArtefatoService from '../services/ArtefatoService.js';
 
 class ArtefatoController {
     async store(req, res) {
